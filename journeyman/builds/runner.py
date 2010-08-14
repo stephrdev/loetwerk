@@ -1,12 +1,13 @@
 from StringIO import StringIO
 import tempfile, yaml, sys
-from journeyman.builds.models import Build
+from journeyman.builds.models import Build, BUILD_STATES
 from fabric.state import env
 from fabric.api import run, cd, prefix, get
 from fabric.contrib.files import exists
 from fabric.main import update_output_levels
 from fabric.network import disconnect_all
 from django.utils import simplejson as json
+from datetime import datetime
 
 class InvalidBuildException(Exception): pass
 class InvalidRepositoryException(Exception): pass
@@ -19,6 +20,7 @@ class BuildRunner(object):
     build_ve_name = None
     build_ve_path = None
     build_src = None
+    repo_head_id = None
 
     def __init__(self, build):
         if type(build) == int:
@@ -74,7 +76,7 @@ class BuildRunner(object):
         self.build_ve_path = 'builds/%s' % self.build_ve_name
 
         output = run('virtualenv %s' % self.build_ve_path)
-        return True, output.return_code
+        return output.return_code == 0, output.return_code
 
     def get_repository(self):
         # FIXME: support multiple vcs types
@@ -84,7 +86,19 @@ class BuildRunner(object):
         self.build_src = '%s/src' % self.build_ve_path
 
         output = run('git clone %s %s' % (''.join(self.build.project.repository.split('+')[1:]), self.build_src))
-        return True, output.return_code
+        return output.return_code == 0, output.return_code
+
+    def get_repo_head_id(self):
+        # FIXME: support multiple vcs types
+        if not self.build.project.repository.startswith('git+'):
+            raise InvalidRepositoryException('Invalid repository: %s' % self.build.project.repository)
+
+        self.build_src = '%s/src' % self.build_ve_path
+        with cd(self.build_src):
+            output = run('git log --pretty="format:%H" -n 1')
+            self.repo_head_id = output
+
+        return output.return_code == 0, output.return_code
 
     def get_config(self):
         with cd(self.build_src):
@@ -105,17 +119,29 @@ class BuildRunner(object):
         return True, 0
 
     def run_build(self):
+        self.build.started = datetime.now()
+        self.build.state = BUILD_STATES.RUNNING
+        self.build.save()
+        result, state = self.run_build_steps()
+        self.build.state = state
+        self.build.revision = self.repo_head_id
+        self.build.finished = datetime.now()
+        self.build.save()
+
+    def run_build_steps(self):
         try:
             if not self.run_step('prepare fabric', self.prepare_fabric):
-                return False
+                return False, BUILD_STATES.FAILED
             if not self.run_step('prepare virtualenv', self.prepare_ve):
-                return False
+                return False, BUILD_STATES.FAILED
             if not self.run_step('fetch repository', self.get_repository):
-                return False
+                return False, BUILD_STATES.FAILED
+            if not self.run_step('fetch repo head id', self.get_repo_head_id):
+                return False, BUILD_STATES.FAILED
             if not self.run_step('fetch config', self.get_config):
-                return False
+                return False, BUILD_STATES.FAILED
             else:
                 print self.config
-            return True
+            return True, BUILD_STATES.STABLE
         finally:
             disconnect_all()

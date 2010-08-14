@@ -1,7 +1,7 @@
 from django.contrib import admin
 from journeyman.builds.models import Build, BuildStep
 
-class BuildStepInline(admin.StackedInline):
+class BuildStepInline(admin.TabularInline):
     model = BuildStep
     extra = 0
 

@@ -4,6 +4,7 @@ from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
 
 class BUILD_STATES(Options):
+    RUNNING = "running"
     FAILED = "failed"
     UNSTABLE = "unstable"
     STABLE = "stable"
