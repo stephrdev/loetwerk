@@ -26,6 +26,10 @@ class Build(models.Model):
         return u'%s/%s/%s (%s)' % (self.project, self.node, self.state,
             self.started)
 
+    @property
+    def build_steps(self):
+        return self.buildstep_set.all().order_by('started')
+
 class BuildStep(models.Model):
     build = models.ForeignKey(Build)
 
@@ -39,3 +43,21 @@ class BuildStep(models.Model):
     def __unicode__(self):
         return '%s/%s' % (self.build,
             'successful' if self.successful else 'failed')
+
+    def return_code(self):
+        try:
+            return self.extra['return_code']
+        except:
+            return None
+
+    def stdout(self):
+        try:
+            return self.extra['stdout']
+        except:
+            return None
+
+    def exception_message(self):
+        try:
+            return self.extra['exception_message']
+        except:
+            return None

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Project: {{ object.name }}</h1>
+    <h2>{{ object }}</h2>
+    <ul>
+        <li><em>Repository</em>: {{ object.repository }}</li>
+        <li><em>Last build</em>: {{ object.last_build.started }}</li>
+        <li><em>Last successful_build</em>: {{ object.last_successful_build.started }}</li>
+    </ul>
+    <hr>
+    <h2>Builds</h2>
+    <table>
+        <thead>
+            <th>Build</th>
+            <th>Started</th>
+            <th>Finished</th>
+            <th>Node</th>
+            <th>Result</th>
+        </thead>
+        {% for build in build_list %}
+        <tr>
+            <td><a href="{% url builds_detail build.pk %}">{{ build }}</a></td>
+            <td>{{ build.started }}</td>
+            <td>{{ build.finished }}</td>
+            <td>{{ build.node }}</td>
+            <td>{{ build.state }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr />
+    <a href="{% url builds_create object.pk %}">Queue another build</a>
+{% endblock %}

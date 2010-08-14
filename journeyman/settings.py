@@ -81,9 +81,9 @@ INSTALLED_APPS = (
     'formwizard',
     'ghettoq',
     'south',
-    'projects',
-    'workers',
-    'builds',
+    'journeyman.projects',
+    'journeyman.workers',
+    'journeyman.builds',
 )
 
 import djcelery
@@ -92,6 +92,10 @@ djcelery.setup_loader()
 CARROT_BACKEND = 'ghettoq.taproot.Database'
 CELERY_RESULT_BACKEND = 'database'
 CELERY_DEFAULT_EXCHANGE = "tasks"
+CELERY_DEFAULT_QUEUE = 'tasks'
+CELERY_QUEUES = {
+    'tasks': {'exchange': 'tasks'},
+}
 
 try:
     from local_settings import *

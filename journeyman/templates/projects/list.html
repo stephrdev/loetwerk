@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Projects</h1>
+    <table>
+        <thead>
+            <th>Project</th>
+            <th>Last build</th>
+            <th>Last successful build</th>
+        </thead>
+        {% for object in object_list %}
+        <tr>
+            <td><a href="{% url projects_detail object.pk %}">{{ object.name }}</a></td>
+            <td>{{ object.last_build.started }}</td>
+            <td>{{ object.last_successful_build.started }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr />
+    <a href="{% url projects_create %}">Add another project</a>
+{% endblock %}

@@ -1,0 +1,69 @@
+body {
+    font-family: 'Manola', arial, serif;
+    font-size: 0.9em;
+}
+h1, h2 { color: #002A54; }
+h1 { font-size: 1.4em; }
+h2 { font-size: 1.1em; }
+.header {
+    background-color: #FFA200;
+    border-bottom: 2px solid #544A38;
+    color: #002A54;
+}
+.header h1 {
+    padding: 0em 1em;
+}
+.footer {
+    border-top: 2px solid #544A38;
+}
+table {
+    border-collapse: collapse;
+    border: 1px solid #000000;
+    color: #555555;
+    background: #ffffff;
+    width: 99%;
+}
+td, th {
+    border: 1px dotted #bbbbbb;
+    padding: .4em;
+    text-align: left;
+}
+thead th {
+    border: 1px solid #000000;
+    font-weight: bold;
+    color: #333333;
+    white-space: nowrap;
+}
+tbody th { white-space: nowrap; }
+tbody tr.odd {background: #f2f2f2;}
+tbody tr:hover {background: #efe4b6;}
+
+tbody tr:hover a {
+    color: #000000;
+}
+label {
+    width: 150px;
+    display: inline-block;
+    float:left;
+}
+input[type=text], textarea {
+    width: 400px;
+}
+p.help { font-style: italic; }
+ul.errorlist {
+    list-style-type: none;
+    color: #ff0000;
+    padding-left: 0;
+}
+.stable, .successful {
+    color: #00FF1A;
+}
+.failed {
+    color: #FF293B;
+}
+.unstable {
+    color: #FF7E29;
+}
+.unknown, .queued, .running {
+    color: #676B70;
+}

@@ -2,10 +2,11 @@ from tempfile import mkdtemp
 
 from django import forms
 from django.template import RequestContext
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from formwizard.forms import SessionFormWizard
 
-from .models import Project
+from journeyman.projects.models import Project
+from journeyman.projects.forms import RegisterRepository, BuildProcess, UploadJourneyConfig, JourneyConfiguration
 
 template_config = """
 build:
@@ -24,24 +25,6 @@ options:
 - pip-dependencies: %(dependencies)s
 """
 
-
-class RegisterRepository(forms.Form):
-    name = forms.CharField(help_text="What's the name of your awesome project?")
-    repository = forms.CharField(help_text="Please enter a valid repository url (e.g. git+git://github.com/stephrdev/loetwerk.git)")
-    
-class BuildProcess(forms.Form):
-    build_steps = forms.CharField(initial="python setup.py install", widget=forms.Textarea(attrs={'rows':3, 'cols':40}), help_text="Let's start off with the easy stuff, please type in all the commands needed to install your package")
-    test_steps = forms.CharField(initial="python setup.py test", widget=forms.Textarea(attrs={'rows':3, 'cols':40}), help_text="Now tell us how to run your tests. If you should have many different test suites, just add another line.")
-    
-    dependencies = forms.CharField(initial="dependencies.txt", widget=forms.Textarea(attrs={'rows':3, 'cols':40}), help_text="Please enter a list of pip requirement files that you have used to specify your dependencies")
-    
-    test_xmls = forms.CharField(required=False, help_text="Please enter a whitespace separated list of paths of unit test result xmls.") 
-
-class UploadJourneyConfig(forms.Form):
-    pass
-    
-class JourneyConfiguration(forms.Form):
-    config_file = forms.CharField(initial="journey.conf/config")
 
 def ymlize_list(text):
     yml_steps = []
@@ -69,12 +52,27 @@ class ProjectWizard(SessionFormWizard):
     
     def done(self, request, form_list):
         all_attrs = self.get_all_cleaned_data()
-        print dir(Project._meta)
-        Project(**dict((k,v) for k,v in all_attrs.items() if k in Project._meta.get_all_field_names())).save()
+        project = Project(**dict((k,v) for k,v in all_attrs.items() if k in Project._meta.get_all_field_names())).save()
         return render_to_response(
             'projects/done.html',
-            {'form_list': [form.cleaned_data for form in form_list]},
+            {'object': project},
             context_instance=RequestContext(request)
         )
 
 create = ProjectWizard([RegisterRepository, BuildProcess, UploadJourneyConfig, JourneyConfiguration])
+
+def list(request):
+    return render_to_response(
+        'projects/list.html',
+        {'object_list': Project.objects.filter(active=True)},
+        context_instance=RequestContext(request)
+    )
+
+def detail(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+    return render_to_response(
+        'projects/detail.html',
+        {'object': project,
+        'build_list': project.build_set.all().order_by('-started')},
+        context_instance=RequestContext(request)
+    )
