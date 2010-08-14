@@ -67,6 +67,7 @@ class BuildRunner(object):
         self.worker_ssh_key.write(self.build.node.ssh_key)
         self.worker_ssh_key.flush()
 
+        env.warn_only = True
         env.key_filename = self.worker_ssh_key.name
         env.user = self.build.node.username
         env.all_hosts = [self.build.node.host,]
@@ -126,6 +127,55 @@ class BuildRunner(object):
             finally:
                 config_file.close()
 
+            if 'options' not in self.config:
+                self.config['options'] = {}
+            if 'dependencies' in self.config:
+                raise InvalidConfigException('build step dependencies is reserved')
+
+            if 'build' not in self.config:
+                self.config['build'] = ['dependencies', 'install', 'test',]
+
+            if not set(self.config['build']).issubset(set(self.config.keys() + ['dependencies',])):
+                raise InvalidConfigException('some build steps are not configured')
+
+        return True, 0
+
+    def get_dependencies(self):
+        if 'pip-dependencies' in self.config['options']:
+            with cd(self.build_src):
+                for req_file in self.config['options']['pip-dependencies'].split(' '):
+                    output = run('pip -E .. install -r %s' % req_file)
+                    if output.return_code <> 0:
+                        return False, output.return_code
+        return True, 0
+
+    def get_results(self):
+        if 'unittest-xml-results' not in self.config['options']:
+            return True, 0
+
+        with cd(self.build_src):
+            pwd = run('pwd')
+            for test_file in self.config['options']['unittest-xml-results'].split(' '):
+                print test_file, exists(test_file)
+                if exists(test_file):
+                    local_test_file = tempfile.NamedTemporaryFile()
+                    get('%s/%s' % (pwd, test_file),
+                        local_test_file.name)
+                    self.build.buildresult_set.create(
+                        name=test_file,
+                        body=''.join(local_test_file.readlines())
+                    )
+                    local_test_file.close()
+
+        return True, 0
+
+    def run_commands(self, commands, allow_fail=False):
+        with cd(self.build_src):
+            with prefix('source ../bin/activate'):
+                for command in commands:
+                    output = run(command)
+                    if output.return_code <> 0 and not allow_fail:
+                        return False, output.return_code
         return True, 0
 
     def run_build(self):
@@ -150,8 +200,19 @@ class BuildRunner(object):
                 return False, BUILD_STATES.FAILED
             if not self.run_step('fetch config', self.get_config):
                 return False, BUILD_STATES.FAILED
-            else:
-                print self.config
+
+            for step in self.config['build']:
+                if step == 'dependencies':
+                    if not self.run_step('fetch dependencies', self.get_dependencies):
+                        return False, BUILD_STATES.FAILED
+                else:
+                    if not self.run_step('execute %s' % step,
+                        self.run_commands, self.config[step], step == 'test'):
+                        return False, BUILD_STATES.FAILED
+
+            if 'unittest-xml-results' in self.config['options']:
+                if not self.run_step('fetch results', self.get_results):
+                    return False, BUILD_STATES.FAILED
             return True, BUILD_STATES.STABLE
         finally:
             disconnect_all()

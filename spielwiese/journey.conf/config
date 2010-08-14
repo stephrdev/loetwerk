@@ -7,7 +7,7 @@ install:
 - cd spielwiese && python setup.py install
 
 test:
-- cd spielwiese && nosetests
+- cd spielwiese && nosetests --with-xunit
 
 options:
     unittest-xml-results: spielwiese/nosetests.xml

@@ -19,8 +19,8 @@ test:
 %(test)s
 
 options:
-- unittest-xml-results: %(test_xmls)s
-- pip-dependencies: %(dependencies)s
+    unittest-xml-results: %(test_xmls)s
+    pip-dependencies: %(dependencies)s
 """
 
 def ymlize_list(text):

@@ -58,5 +58,16 @@ class BuildStep(models.Model):
     def stdout(self):
         return self.extra.get('stdout', None)
 
+    def stderr(self):
+        return self.extra.get('stderr', None)
+
     def exception_message(self):
         return self.extra.get('exception_message', None)
+
+class BuildResult(models.Model):
+    build = models.ForeignKey(Build)
+    name = models.CharField(max_length=255)
+    body = models.TextField(blank=True)
+
+    def __unicode__(self):
+        return '%s - %s' % (self.build, self.name)
