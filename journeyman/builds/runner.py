@@ -1,8 +1,11 @@
-import tempfile, yaml
+from StringIO import StringIO
+import tempfile, yaml, sys
 from journeyman.builds.models import Build
 from fabric.state import env
 from fabric.api import run, cd, prefix, get
 from fabric.contrib.files import exists
+from fabric.main import update_output_levels
+from fabric.network import disconnect_all
 from django.utils import simplejson as json
 
 class InvalidBuildException(Exception): pass
@@ -26,6 +29,34 @@ class BuildRunner(object):
         else:
             self.build = build
 
+    def run_step(self, name, task, *args, **kwargs):
+        stdout = StringIO()
+        stderr = StringIO()
+        sys.stdout = stdout
+        sys.stderr = stderr
+        try:
+            output, return_code = task(*args, **kwargs)
+            result = (True, None)
+        except (SystemExit, Exception), e:
+            output, return_code = '', 1
+            result = (False, ('%s: %s' % (e.__class__.__name__, e.message)))
+        finally:
+            sys.stdout = sys.__stdout__
+            sys.stderr = sys.__stderr__
+
+        self.build.buildstep_set.create(
+            name=name,
+            successful=result[0],
+            extra = json.dumps({
+                'return_code': return_code,
+                'exception_message': result[1],
+                'stdout': stdout.getvalue(),
+                'stderr': stderr.getvalue(),
+                'output': output,
+            }),
+        )
+        return result[0]
+
     def prepare_fabric(self):
         self.worker_ssh_key = tempfile.NamedTemporaryFile()
         self.worker_ssh_key.write(self.build.node.ssh_key)
@@ -36,10 +67,14 @@ class BuildRunner(object):
         env.all_hosts = [self.build.node.host,]
         env.host_string = self.build.node.host
 
+        return True, 0
+
     def prepare_ve(self):
         self.build_ve_name = 'journeyman.%s' % tempfile.mktemp(dir='')
         self.build_ve_path = 'builds/%s' % self.build_ve_name
-        run('virtualenv %s' % self.build_ve_path)
+
+        output = run('virtualenv %s' % self.build_ve_path)
+        return True, output.return_code
 
     def get_repository(self):
         # FIXME: support multiple vcs types
@@ -47,7 +82,9 @@ class BuildRunner(object):
             raise InvalidRepositoryException('Invalid repository: %s' % self.build.project.repository)
 
         self.build_src = '%s/src' % self.build_ve_path
-        run('git clone %s %s' % (self.build.project.repository, self.build_src))
+
+        output = run('git clone %s %s' % (''.join(self.build.project.repository.split('+')[1:]), self.build_src))
+        return True, output.return_code
 
     def get_config(self):
         with cd(self.build_src):
@@ -57,7 +94,7 @@ class BuildRunner(object):
 
             pwd = run('pwd')
             config_file = tempfile.NamedTemporaryFile()
-            get('%s/' % (pwd, remote_config_file), config_file.name)
+            get('%s/%s' % (pwd, remote_config_file), config_file.name)
             try:
                 self.config = yaml.load(config_file)
             except Exception, e:
@@ -65,9 +102,20 @@ class BuildRunner(object):
             finally:
                 config_file.close()
 
+        return True, 0
+
     def run_build(self):
-        self.build.buildstep_set.create(
-            name='prepare fabric',
-            successful=True,
-            extra = json.dumps({'out': 'ok'}),
-        )
+        try:
+            if not self.run_step('prepare fabric', self.prepare_fabric):
+                return False
+            if not self.run_step('prepare virtualenv', self.prepare_ve):
+                return False
+            if not self.run_step('fetch repository', self.get_repository):
+                return False
+            if not self.run_step('fetch config', self.get_config):
+                return False
+            else:
+                print self.config
+            return True
+        finally:
+            disconnect_all()
