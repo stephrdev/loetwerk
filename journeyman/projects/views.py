@@ -7,8 +7,7 @@ from formwizard.forms import SessionFormWizard
 
 from .models import Project
 
-template_config = """
-build:
+template_config = """build:
 - dependencies
 - install
 - test
@@ -69,11 +68,11 @@ class ProjectWizard(SessionFormWizard):
     
     def done(self, request, form_list):
         all_attrs = self.get_all_cleaned_data()
-        print dir(Project._meta)
-        Project(**dict((k,v) for k,v in all_attrs.items() if k in Project._meta.get_all_field_names())).save()
+        p = Project(**dict((k,v) for k,v in all_attrs.items() if k in Project._meta.get_all_field_names()))
+        p.save()
         return render_to_response(
             'projects/done.html',
-            {'form_list': [form.cleaned_data for form in form_list]},
+            {'project': p},
             context_instance=RequestContext(request)
         )
 
