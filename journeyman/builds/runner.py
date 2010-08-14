@@ -163,7 +163,7 @@ class BuildRunner(object):
                         local_test_file.name)
                     self.build.buildresult_set.create(
                         name=test_file,
-                        body=local_test_file.readlines()
+                        body=''.join(local_test_file.readlines())
                     )
                     local_test_file.close()
 
