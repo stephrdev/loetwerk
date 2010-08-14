@@ -5,3 +5,5 @@ ghettoq==0.4.1
 django-celery==2.0.2
 fabric==0.9.1
 lxml
+-e git+http://github.com/stephrdev/django-formwizard.git#egg=django-formwizard
+-e git://github.com/bastih/pony_barn.git#egg=pony_barn
