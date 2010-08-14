@@ -1,0 +1,17 @@
+{% load i18n %}
+{% csrf_token %}
+
+{% for field in form %}
+    <div class="fieldWrapper">
+        <p>{{ field.help_text }}</p>
+        {% if field.errors %}
+            <p>{{ field.errors }}</p>
+        {% endif %} 
+        <p>{{ field }}</p>
+    </div>
+{% endfor %}
+
+{% if form_prev_step %}
+<button name="form_prev_step" value="{{ form_prev_step }}">{% trans "prev step" %}</button>
+{% endif %}
+<input type="submit" name="submit" value="{% trans "submit" %}" />

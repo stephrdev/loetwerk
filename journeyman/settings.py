@@ -42,8 +42,8 @@ SITE_ID = 1
 USE_I18N = True
 USE_L10N = True
 
-MEDIA_ROOT = ''
-MEDIA_URL = ''
+MEDIA_ROOT = PROJECT_ROOT+'/media/'
+MEDIA_URL = '/media/'
 ADMIN_MEDIA_PREFIX = '/admin_media/'
 
 DEFAULT_FROM_EMAIL = 'webmaster@rdev.info'
@@ -53,6 +53,7 @@ EMAIL_SUBJECT_PREFIX = '[%s] ' % PROJECT_NAME
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
     'django.template.loaders.app_directories.Loader',
+    'django.template.loaders.eggs.Loader',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -77,6 +78,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'djcelery',
+    'formwizard',
     'ghettoq',
     'south',
     'projects',

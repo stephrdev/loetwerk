@@ -9,7 +9,7 @@ class Project(models.Model):
     ssh_key = models.TextField(blank=True)
 
     #Build
-    config_dir = models.CharField(max_length=255, default="journey.conf")
+    config_file = models.CharField(max_length=255, default="journey.conf/config")
 
     def __unicode__(self):
         return self.name

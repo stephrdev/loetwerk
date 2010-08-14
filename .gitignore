@@ -1,2 +1,5 @@
 secret.txt
 local_database.db
+*.pyc
+*.pyo
+*.DS_Store
