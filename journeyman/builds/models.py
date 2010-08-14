@@ -3,7 +3,7 @@ from journeyman.workers.models import BuildNode
 from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
 
-class BUILD_STATES(Options):
+class BuildState(Options):
     QUEUED = 'queued'
     RUNNING = 'running'
     FAILED = 'failed'
@@ -19,13 +19,13 @@ class Build(models.Model):
     started = models.DateTimeField(null=True, blank=True)
     finished = models.DateTimeField(null=True, blank=True)
 
-    state = models.CharField(max_length=20, default=BUILD_STATES.UNKNOWN,
-        choices=BUILD_STATES.choices())
+    state = models.CharField(max_length=20, default=BuildState.UNKNOWN,
+        choices=BuildState.choices())
 
     def state_css_class(self):
-        if self.state == BUILD_STATES.STABLE:
+        if self.state == BuildState.STABLE:
             return "success"
-        elif self.state in [BUILD_STATE.QUEUED, BUILD_STATE.RUNNING]:
+        elif self.state in [BuildState.QUEUED, BuildState.RUNNING]:
             return "notice"
         else: 
             return "error"
@@ -53,16 +53,16 @@ class BuildStep(models.Model):
             'successful' if self.successful else 'failed')
 
     def return_code(self):
-        return self.extra.get('return_code', None)
+        return dict(self.extra).get('return_code', None)
 
     def stdout(self):
-        return self.extra.get('stdout', None)
+        return dict(self.extra).get('stdout', None)
 
     def stderr(self):
-        return self.extra.get('stderr', None)
+        return dict(self.extra).get('stderr', None)
 
     def exception_message(self):
-        return self.extra.get('exception_message', None)
+        return dict(self.extra).get('exception_message', None)
 
 class BuildResult(models.Model):
     build = models.ForeignKey(Build)

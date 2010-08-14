@@ -1,7 +1,7 @@
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.template import RequestContext
 
-from journeyman.builds.models import Build, BUILD_STATES
+from journeyman.builds.models import Build, BuildState
 from journeyman.builds.tasks import BuildTask
 
 from journeyman.workers.models import BuildNode
@@ -16,7 +16,7 @@ def create(request, project_id):
             node=node
         )
         BuildTask.delay(build.pk)
-        build.state = BUILD_STATES.QUEUED
+        build.state = BuildState.QUEUED
         build.save()
 
     return redirect('projects_detail', project_id=project_id)
