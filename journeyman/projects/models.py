@@ -6,7 +6,7 @@ class Project(models.Model):
     
     #Repository
     repository = models.CharField(max_length=255)
-    ssh_key = models.TextField()
+    ssh_key = models.TextField(blank=True)
     
     #Build
     config_dir = models.CharField(max_length=255, default="journey.conf")

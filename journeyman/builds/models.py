@@ -12,10 +12,10 @@ class BUILD_STATES(Options):
 class Build(models.Model):
     project = models.ForeignKey(Project)
     node = models.ForeignKey(BuildNode)
-    revision = models.CharField(max_length=255)
+    revision = models.CharField(max_length=255, blank=True)
     
-    started = models.DateTimeField()
-    finished = models.DateTimeField()
+    started = models.DateTimeField(null=True, blank=True)
+    finished = models.DateTimeField(null=True, blank=True)
     
     state = models.CharField(max_length=20, default=BUILD_STATES.UNKNOWN, choices=BUILD_STATES.choices())
     
