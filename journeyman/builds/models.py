@@ -4,12 +4,12 @@ from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
 
 class BUILD_STATES(Options):
-    QUEUED = "queued"
-    RUNNING = "running"
-    FAILED = "failed"
-    UNSTABLE = "unstable"
-    STABLE = "stable"
-    UNKNOWN = "unknown"
+    QUEUED = 'queued'
+    RUNNING = 'running'
+    FAILED = 'failed'
+    UNSTABLE = 'unstable'
+    STABLE = 'stable'
+    UNKNOWN = 'unknown'
 
 class Build(models.Model):
     project = models.ForeignKey(Project)
@@ -45,19 +45,10 @@ class BuildStep(models.Model):
             'successful' if self.successful else 'failed')
 
     def return_code(self):
-        try:
-            return self.extra['return_code']
-        except:
-            return None
+        return self.extra.get('return_code', None)
 
     def stdout(self):
-        try:
-            return self.extra['stdout']
-        except:
-            return None
+        return self.extra.get('stdout', None)
 
     def exception_message(self):
-        try:
-            return self.extra['exception_message']
-        except:
-            return None
+        return self.extra.get('exception_message', None)

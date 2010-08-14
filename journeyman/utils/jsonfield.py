@@ -19,14 +19,14 @@ class JSONField(models.TextField):
         models.TextField.__init__(self, verbose_name, name, blank=True,
                                   **kwargs)
         self.encoder = encoder
-        
+
     def south_field_triple(self):
         "Returns a suitable description of this field for South."
         from south.modelsinspector import introspector
         field_class = self.__class__.__module__ + "." + self.__class__.__name__
         args, kwargs = introspector(self.__class__)
         return (field_class, args, kwargs)
-    
+
 
     def db_type(self):
         return "text"
