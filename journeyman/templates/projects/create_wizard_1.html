@@ -1,8 +1,11 @@
 {% extends "base.html" %}
-{% block content %}
-    <h1>Build configuration</h1>
 
-    Please tell us about your build process.
+{% block heading %}
+Build configuration
+{% endblock %}
+
+{% block content %}
+    <p>Please tell us about your build process.</p>
 
     <form action="." method="post">
         {% include "formwizard/wizard.html" %}

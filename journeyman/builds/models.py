@@ -22,6 +22,14 @@ class Build(models.Model):
     state = models.CharField(max_length=20, default=BUILD_STATES.UNKNOWN,
         choices=BUILD_STATES.choices())
 
+    def state_css_class(self):
+        if self.state == BUILD_STATES.STABLE:
+            return "success"
+        elif self.state in [BUILD_STATE.QUEUED, BUILD_STATE.RUNNING]:
+            return "notice"
+        else: 
+            return "error"
+
     def __unicode__(self):
         return u'%s/%s/%s (%s)' % (self.project, self.node, self.state,
             self.started)

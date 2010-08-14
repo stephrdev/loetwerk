@@ -1,6 +1,15 @@
 {% extends "base.html" %}
+
+
+{% block heading %}
+Projects
+{% endblock %}
+
+{% block activities %}
+<a class="button" href="{% url projects_create %}"> Create new project </a>
+{% endblock %}
+
 {% block content %}
-    <h1>Projects</h1>
     <table>
         <thead>
             <th>Project</th>
@@ -15,7 +24,7 @@
                 {% if object.last_build %}
                 <a href="{% url builds_detail object.last_build.pk %}">
                     {{ object.last_build.started }}
-                </a>
+                s</a>
                 {% else %}
                     no build available
                 {% endif %}
@@ -32,6 +41,4 @@
         </tr>
         {% endfor %}
     </table>
-    <hr />
-    <a href="{% url projects_create %}">Add another project</a>
 {% endblock %}

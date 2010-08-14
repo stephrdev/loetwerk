@@ -1,3 +1,4 @@
+{%load i18n%}
 {% csrf_token %}
 {% if form.forms %}
     {{ form.management_form }}
@@ -10,12 +11,9 @@
     {% include "formwizard/form.html" %}
 {% endif %}
 
-<p>
-    {% if form_prev_step %}
-        <button name="form_prev_step" value="{{ form_first_step }}">
-            Return to start</button>
-        <button name="form_prev_step" value="{{ form_prev_step }}">
-            One step back</button>
-    {% endif %}
-    <input type="submit" name="submit" value="Submit" />
-</p>
+{% if form_prev_step %}
+<button class="span-3" name="form_prev_step" value="{{ form_prev_step }}">{% trans "back" %}</button>
+{% endif %}
+<div class="prepend-21">
+<button class="span-3 last" type="submit" name="submit" />{% trans "submit" %}</button>
+</div>

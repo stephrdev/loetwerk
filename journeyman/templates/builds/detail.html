@@ -1,6 +1,13 @@
 {% extends "base.html" %}
+
+{% block heading %}{{ object.project }}{% endblock %}
+
+{% block activities %}
+    <a class="button" href="{% url builds_delete object.pk %}">Delete</a>
+{% endblock %}
+
 {% block content %}
-    <a href="{% url builds_delete object.pk %}" style="float:right">Delete this build</a>
+
     <h1>Build: {{ object.project }}/{{ object.node }}/{{ object.state }}</h1>
     <ul>
         <li><em>Project</em>: <a href="{% url projects_detail object.project.pk %}">{{ object.project }}</a></li>

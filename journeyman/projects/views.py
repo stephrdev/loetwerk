@@ -7,8 +7,7 @@ from journeyman.projects.models import Project
 from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
     JourneyConfigOutputForm, JourneyConfigFileForm, ProjectForm
 
-template_config = """
-build:
+template_config = """build:
 - dependencies
 - install
 - test

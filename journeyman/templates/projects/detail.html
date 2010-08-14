@@ -1,13 +1,13 @@
 {% extends "base.html" %}
+
+{% block heading %}{{ object.name }}{% endblock %}
+{% block activities %}
+<a class="button" href="{% url projects_edit object.pk %}">Edit this project</a>
+<a class="button" href="{% url projects_delete object.pk %}">Delete this project</a>
+{% endblock %}
+
 {% load pagination_tags %}
 {% block content %}
-    <div style="float:right">
-        <a href="{% url projects_edit object.pk %}">Edit this project</a> |
-        <a href="{% url projects_delete object.pk %}">Delete this project</a>
-    </div>
-
-    <h1>Project: {{ object.name }}</h1>
-    <h2>{{ object }}</h2>
     <ul>
         <li><em>Repository</em>: {{ object.repository }}</li>
         <li><em>Last build</em>:
@@ -69,5 +69,4 @@
         {% endfor %}
     </table>
     {% paginate %}
-
 {% endblock %}

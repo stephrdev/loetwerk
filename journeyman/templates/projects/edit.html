@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% block content %}
-    <h1>Edit project: {{ object.name }}</h1>
 
+{% block heading %}
+Edit {{ object.name }}
+{% endblock %}
+
+{% block content %}
     <form action="." method="post">
         {% csrf_token %}
         {% include "formwizard/form.html" %}

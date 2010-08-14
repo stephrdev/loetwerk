@@ -1,8 +1,10 @@
 {% extends "base.html" %}
-{% block content %}
-    <h1>Nearly finished</h1>
 
-    <p>Last step, just to make sure, please tell me where you put the configuration file</p>
+{% block heading %}
+Nearly finished
+{% endblock %}
+{% block content %}
+    <p>Last step, just to make sure, please tell us where you put your configuration file</p>
 
     <form action="." method="post">
         {% include "formwizard/wizard.html" %}
