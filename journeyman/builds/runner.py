@@ -156,7 +156,6 @@ class BuildRunner(object):
         with cd(self.build_src):
             pwd = run('pwd')
             for test_file in self.config['options']['unittest-xml-results'].split(' '):
-                print test_file, exists(test_file)
                 if exists(test_file):
                     local_test_file = tempfile.NamedTemporaryFile()
                     get('%s/%s' % (pwd, test_file),
