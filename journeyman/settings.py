@@ -1,4 +1,6 @@
 import os
+from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS
+
 PROJECT_ROOT = os.path.dirname(__file__)
 PROJECT_NAME = os.path.split(PROJECT_ROOT)[-1]
 
@@ -62,6 +64,11 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'pagination.middleware.PaginationMiddleware',
+)
+
+TEMPLATE_CONTEXT_PROCESSORS += (
+    'django.core.context_processors.request',
 )
 
 ROOT_URLCONF = '%s.urls' % PROJECT_NAME
@@ -77,6 +84,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
+    'pagination',
     'djcelery',
     'formwizard',
     'ghettoq',

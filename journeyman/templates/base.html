@@ -6,7 +6,6 @@
 
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/960.css" type="text/css" />
         <link rel="stylesheet" href="{{ MEDIA_URL }}css/main.css" type="text/css" />
-        <link href='http://fonts.googleapis.com/css?family=Manola' rel='stylesheet' type='text/css'>
         <!--[if IE]>
             <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
         <![endif]-->
@@ -29,7 +28,11 @@
         <div class="bg">
             <div class="container_12">
                 <div class="grid_12 header">
-                    <a href="{% url projects_list %}"><h1>Journeyman</h1></a>
+                    <h1>Journeyman</h1>
+                </div>
+                <div class="grid_12 menu">
+                    <a href="{% url projects_list %}">Projects</a> |
+                    <a href="{% url projects_create %}">Create Project</a>
                 </div>
                 <div class="grid_12">
                     {% block content %}
@@ -37,7 +40,7 @@
                 </div>
                 <hr class="clear" />
                 <div class="grid_12 footer">
-                    <small>Django Dash 2010</small>
+                    <small>Django Dash 2010, Stephan J&auml;kel and Sebastian Hillig</small>
                 </div>
             </div>
         </div>

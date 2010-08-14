@@ -1,14 +1,53 @@
 {% extends "base.html" %}
+{% load pagination_tags %}
 {% block content %}
+    <div style="float:right">
+        <a href="{% url projects_edit object.pk %}">Edit this project</a> |
+        <a href="{% url projects_delete object.pk %}">Delete this project</a>
+    </div>
+
     <h1>Project: {{ object.name }}</h1>
     <h2>{{ object }}</h2>
     <ul>
         <li><em>Repository</em>: {{ object.repository }}</li>
-        <li><em>Last build</em>: {{ object.last_build.started }}</li>
-        <li><em>Last successful_build</em>: {{ object.last_successful_build.started }}</li>
+        <li><em>Last build</em>:
+            {% if object.last_build %}
+            <a href="{% url builds_detail object.last_build.pk %}">
+                {{ object.last_build.started }}
+            </a>
+            {% else %}
+                no build available
+            {% endif %}
+        </li>
+        <li><em>Last stable build</em>:
+            {% if object.last_stable_build %}
+            <a href="{% url builds_detail object.last_stable_build.pk %}">
+                {{ object.last_stable_build.started }}
+            </a>
+            {% else %}
+                no build available
+            {% endif %}
+        </li>
     </ul>
     <hr>
-    <h2>Builds</h2>
+    <h2>Outstanding builds</h2>
+    <table>
+        <thead>
+            <th>Build</th>
+            <th>Node</th>
+        </thead>
+        {% for build in outstanding_build_list %}
+        <tr>
+            <td><a href="{% url builds_detail build.pk %}">
+                Build {{ build.pk }}</a></td>
+            <td>{{ build.node }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <hr />
+    <a href="{% url builds_create object.pk %}">Queue another build</a>
+    <hr />
+    <h2>Finished and running builds</h2>
     <table>
         <thead>
             <th>Build</th>
@@ -17,9 +56,11 @@
             <th>Node</th>
             <th>Result</th>
         </thead>
+        {% autopaginate build_list %}
         {% for build in build_list %}
         <tr>
-            <td><a href="{% url builds_detail build.pk %}">{{ build }}</a></td>
+            <td><a href="{% url builds_detail build.pk %}">
+                {{ build.node.name }}/{{ build.started }}/{{ build.state }}</a></td>
             <td>{{ build.started }}</td>
             <td>{{ build.finished }}</td>
             <td>{{ build.node }}</td>
@@ -27,6 +68,6 @@
         </tr>
         {% endfor %}
     </table>
-    <hr />
-    <a href="{% url builds_create object.pk %}">Queue another build</a>
+    {% paginate %}
+
 {% endblock %}

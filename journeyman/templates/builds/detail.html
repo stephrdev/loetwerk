@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+    <a href="{% url builds_delete object.pk %}" style="float:right">Delete this build</a>
     <h1>Build: {{ object.project }}/{{ object.node }}/{{ object.state }}</h1>
     <ul>
-        <li><em>Project</em>: {{ object.project }}</li>
+        <li><em>Project</em>: <a href="{% url projects_detail object.project.pk %}">{{ object.project }}</a></li>
         <li><em>Revision</em>: {{ object.revision }}</li>
         <li><em>Build node</em>: {{ object.node }}</li>
         <li><em>Build started</em>: {{ object.started }}</li>
@@ -12,7 +13,8 @@
     <hr>
     <h2>Steps</h2>
     {% for step in object.build_steps %}
-        <h3>{{ step.name }} ({{ step.started }} - {{ step.finished }}, {{ step.return_code }})</h3>
+        <h3>{{ step.name }} ({{ step.started }} - {{ step.finished }},
+            {{ step.return_code }})</h3>
         <h4 class="result {% if step.successful %}stable{% else %}failed{% endif %}">
             {% if step.successful %}successful{% else %}failed{% endif %}
         </h4>

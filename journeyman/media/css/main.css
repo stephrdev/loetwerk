@@ -1,5 +1,5 @@
 body {
-    font-family: 'Manola', arial, serif;
+    font-family: Tahoma, serif;
     font-size: 0.9em;
 }
 h1, h2 { color: #002A54; }
@@ -9,6 +9,9 @@ h2 { font-size: 1.1em; }
     background-color: #FFA200;
     border-bottom: 2px solid #544A38;
     color: #002A54;
+}
+.menu {
+    padding: 0.6em 0.6em;
 }
 .header h1 {
     padding: 0em 1em;
