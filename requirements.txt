@@ -3,3 +3,5 @@ PyYAML==3.09
 South==0.7.2
 ghettoq==0.4.1
 django-celery==2.0.2
+fabric==0.9.1
+lxml

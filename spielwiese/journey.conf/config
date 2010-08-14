@@ -1,13 +1,16 @@
-dependencies:
-    requirements.txt
-    requirements-opt.txt
-    
-install:
-    python setup.py install
+build:
+- dependencies
+- install
+- test
 
-test-prepare:
-    cd testapp
-    python manage.py syncdb
-    
+dependencies:
+- requirements.txt
+
+install:
+- python setup.py install
+
 test:
-    python setup.py test
+- nosetests --with-xml
+
+options:
+- test-results: nosetests.xml
