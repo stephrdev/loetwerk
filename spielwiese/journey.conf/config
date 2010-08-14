@@ -10,5 +10,5 @@ test:
 - cd spielwiese && nosetests
 
 options:
-- unittest-xml-results: spielwiese/nosetests.xml
-- pip-dependencies: spielwiese/requirements.txt
+    unittest-xml-results: spielwiese/nosetests.xml
+    pip-dependencies: spielwiese/requirements.txt
