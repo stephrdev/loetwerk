@@ -2,8 +2,9 @@
 
 {% block heading %}{{ object.name }}{% endblock %}
 {% block activities %}
-<a class="button" href="{% url projects_edit object.pk %}">Edit this project</a>
-<a class="button" href="{% url projects_delete object.pk %}">Delete this project</a>
+<a class="button" href="{% url builds_create object.pk %}">Start new build</a>
+<a class="button" href="{% url projects_edit object.pk %}">Configure</a>
+<a class="button" href="{% url projects_delete object.pk %}">Delete</a>
 {% endblock %}
 
 {% load pagination_tags %}
@@ -44,8 +45,6 @@
         </tr>
         {% endfor %}
     </table>
-    <hr />
-    <a href="{% url builds_create object.pk %}">Queue another build</a>
     <hr />
     <h2>Finished and running builds</h2>
     <table>
