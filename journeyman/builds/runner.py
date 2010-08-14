@@ -1,18 +1,24 @@
 from StringIO import StringIO
 import tempfile, yaml, sys
-from journeyman.builds.models import Build, BUILD_STATES
+from journeyman.builds.models import Build, BuildState
 from fabric.state import env
 from fabric.api import run, cd, prefix, get
 from fabric.contrib.files import exists
-from fabric.main import update_output_levels
 from fabric.network import disconnect_all
 from django.utils import simplejson as json
 from datetime import datetime
 
-class InvalidBuildException(Exception): pass
-class InvalidRepositoryException(Exception): pass
-class InvalidConfigDirectoryException(Exception): pass
-class InvalidConfigException(Exception): pass
+class InvalidBuildException(Exception):
+    pass
+
+class InvalidRepositoryException(Exception):
+    pass
+
+class InvalidConfigDirectoryException(Exception):
+    pass
+
+class InvalidConfigException(Exception):
+    pass
 
 class BuildRunner(object):
     build = None
@@ -21,6 +27,7 @@ class BuildRunner(object):
     build_ve_path = None
     build_src = None
     repo_head_id = None
+    config = None
 
     def __init__(self, build):
         if type(build) == int:
@@ -40,9 +47,9 @@ class BuildRunner(object):
         try:
             output, return_code = task(*args, **kwargs)
             result = (True, None)
-        except (SystemExit, Exception), e:
+        except (SystemExit, Exception), ex:
             output, return_code = '', 1
-            result = (False, ('%s: %s' % (e.__class__.__name__, e.message)))
+            result = (False, ('%s: %s' % (ex.__class__.__name__, ex.message)))
         finally:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
@@ -113,7 +120,8 @@ class BuildRunner(object):
         with cd(self.build_src):
             if not exists(self.build.project.config_file):
                 raise InvalidConfigDirectoryException(
-                    'Journey.conf not found: %s' % self.build.project.config_file)
+                    'Journey.conf not found: %s' % 
+                        self.build.project.config_file)
 
             pwd = run('pwd')
             config_file = tempfile.NamedTemporaryFile()
@@ -122,30 +130,34 @@ class BuildRunner(object):
 
             try:
                 self.config = yaml.load(config_file)
-            except Exception, e:
-                raise InvalidConfigException(e.message)
+            except Exception, ex:
+                raise InvalidConfigException(ex.message)
             finally:
                 config_file.close()
 
             if 'options' not in self.config:
                 self.config['options'] = {}
             if 'dependencies' in self.config:
-                raise InvalidConfigException('build step dependencies is reserved')
+                raise InvalidConfigException(
+                    'build step dependencies is reserved')
 
             if 'build' not in self.config:
                 self.config['build'] = ['dependencies', 'install', 'test',]
 
-            if not set(self.config['build']).issubset(set(self.config.keys() + ['dependencies',])):
-                raise InvalidConfigException('some build steps are not configured')
+            if not set(self.config['build']).issubset(
+                set(self.config.keys() + ['dependencies',])):
+                raise InvalidConfigException(
+                    'some build steps are not configured')
 
         return True, 0
 
     def get_dependencies(self):
         if 'pip-dependencies' in self.config['options']:
             with cd(self.build_src):
-                for req_file in self.config['options']['pip-dependencies'].split(' '):
+                files = self.config['options']['pip-dependencies'].split(' ')
+                for req_file in files:
                     output = run('pip -E .. install -r %s' % req_file)
-                    if output.return_code <> 0:
+                    if output.return_code != 0:
                         return False, output.return_code
         return True, 0
 
@@ -155,7 +167,8 @@ class BuildRunner(object):
 
         with cd(self.build_src):
             pwd = run('pwd')
-            for test_file in self.config['options']['unittest-xml-results'].split(' '):
+            files = self.config['options']['unittest-xml-results'].split(' ')
+            for test_file in files:
                 if exists(test_file):
                     local_test_file = tempfile.NamedTemporaryFile()
                     get('%s/%s' % (pwd, test_file),
@@ -173,13 +186,13 @@ class BuildRunner(object):
             with prefix('source ../bin/activate'):
                 for command in commands:
                     output = run(command)
-                    if output.return_code <> 0 and not allow_fail:
+                    if output.return_code != 0 and not allow_fail:
                         return False, output.return_code
         return True, 0
 
     def run_build(self):
         self.build.started = datetime.now()
-        self.build.state = BUILD_STATES.RUNNING
+        self.build.state = BuildState.RUNNING
         self.build.save()
         result, state = self.run_build_steps()
         self.build.state = state
@@ -189,29 +202,30 @@ class BuildRunner(object):
 
     def run_build_steps(self):
         try:
-            if not self.run_step('prepare fabric', self.prepare_fabric):
-                return False, BUILD_STATES.FAILED
-            if not self.run_step('prepare virtualenv', self.prepare_ve):
-                return False, BUILD_STATES.FAILED
-            if not self.run_step('fetch repository', self.get_repository):
-                return False, BUILD_STATES.FAILED
-            if not self.run_step('fetch repo head id', self.get_repo_head_id):
-                return False, BUILD_STATES.FAILED
-            if not self.run_step('fetch config', self.get_config):
-                return False, BUILD_STATES.FAILED
+            steps = [
+                ('prepare fabric', self.prepare_fabric),
+                ('prepare virtualenv', self.prepare_ve),
+                ('fetch repository', self.get_repository),
+                ('fetch repo head id', self.get_repo_head_id),
+                ('fetch config', self.get_config)
+            ]
+            for name, cmd in steps:
+                if not self.run_step(name, cmd):
+                    return False, BuildState.FAILED
 
             for step in self.config['build']:
                 if step == 'dependencies':
-                    if not self.run_step('fetch dependencies', self.get_dependencies):
-                        return False, BUILD_STATES.FAILED
+                    if not self.run_step('fetch dependencies',
+                        self.get_dependencies):
+                        return False, BuildState.FAILED
                 else:
                     if not self.run_step('execute %s' % step,
                         self.run_commands, self.config[step], step == 'test'):
-                        return False, BUILD_STATES.FAILED
+                        return False, BuildState.FAILED
 
             if 'unittest-xml-results' in self.config['options']:
                 if not self.run_step('fetch results', self.get_results):
-                    return False, BUILD_STATES.FAILED
-            return True, BUILD_STATES.STABLE
+                    return False, BuildState.FAILED
+            return True, BuildState.STABLE
         finally:
             disconnect_all()

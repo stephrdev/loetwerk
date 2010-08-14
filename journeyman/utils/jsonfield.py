@@ -78,8 +78,8 @@ class JSONField(models.TextField):
         try:
             val = simplejson.loads(val, encoding=settings.DEFAULT_CHARSET)
 
-            # XXX We need to investigate why this is happening once we have
-            #     a solid repro case.
+            # We need to investigate why this is happening once we have
+            # a solid repro case.
             if isinstance(val, basestring):
                 # logging.warning("JSONField decode error. Expected dictionary, "
                 #                 "got string for input '%s'" % val)

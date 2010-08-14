@@ -14,9 +14,9 @@ except NameError:
         try:
             from random import choice
             SECRET_KEY = ''.join([choice('abcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*(-_=+)') for i in range(50)])
-            secret = file(SECRET_FILE, 'w')
-            secret.write(SECRET_KEY)
-            secret.close()
+            SECRET_FILE = file(SECRET_FILE, 'w')
+            SECRET_FILE.write(SECRET_KEY)
+            SECRET_FILE.close()
         except IOError:
             Exception('Please create a %s file with random characters to generate your secret key!' % SECRET_FILE)
 
@@ -67,7 +67,7 @@ MIDDLEWARE_CLASSES = (
     'pagination.middleware.PaginationMiddleware',
 )
 
-TEMPLATE_CONTEXT_PROCESSORS += (
+TEMPLATE_CONTEXT_PROCESSORS = TEMPLATE_CONTEXT_PROCESSORS + (
     'django.core.context_processors.request',
 )
 
