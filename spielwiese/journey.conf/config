@@ -3,15 +3,12 @@ build:
 - install
 - test
 
-dependencies:
-- requirements.txt
-
 install:
-- python setup.py install
+- cd spielwiese && python setup.py install
 
 test:
-- nosetests --with-xml
+- cd spielwiese && nosetests
 
 options:
-- test-results: nosetests.xml
-- shell-root: spielwiese/
+- unittest-xml-results: spielwiese/nosetests.xml
+- pip-dependencies: spielwiese/requirements.txt

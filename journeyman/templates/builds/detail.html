@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block heading %}{{ object.project }}{% endblock %}
+
+{% block activities %}
+    <a class="button" href="{% url builds_delete object.pk %}">Delete</a>
+{% endblock %}
+
+{% block content %}
+
+    <h1>Build: {{ object.project }}/{{ object.node }}/{{ object.state }}</h1>
+    <ul>
+        <li><em>Project</em>: <a href="{% url projects_detail object.project.pk %}">{{ object.project }}</a></li>
+        <li><em>Revision</em>: {{ object.revision }}</li>
+        <li><em>Build node</em>: {{ object.node }}</li>
+        <li><em>Build started</em>: {{ object.started }}</li>
+        <li><em>Build finished</em>: {{ object.finished }}</li>
+    </ul>
+    <h2 class="result {{ object.state }}">{{ object.state }}</h2>
+    <hr>
+    <h2>Steps</h2>
+    {% for step in object.build_steps %}
+        <h3>{{ step.name }} ({{ step.started }} - {{ step.finished }},
+            {{ step.return_code }})</h3>
+        <h4 class="result {% if step.successful %}stable{% else %}failed{% endif %}">
+            {% if step.successful %}successful{% else %}failed{% endif %}
+        </h4>
+        {% if step.exception_message %}
+        <h4>Exception</h4>
+        <pre>{{ step.exception_message }}</pre>
+        {% endif %}
+        {% if step.stdout %}
+        <h4>stdout</h4>
+        <pre>{{ step.stdout }}</pre>
+        {% endif %}
+        {% if step.stderr %}
+        <h4>stderr</h4>
+        <pre>{{ step.stderr }}</pre>
+        {% endif %}
+        <hr />
+    {% endfor %}
+{% endblock %}

@@ -84,17 +84,22 @@ class BuildRunner(object):
     def get_repository(self):
         # FIXME: support multiple vcs types
         if not self.build.project.repository.startswith('git+'):
-            raise InvalidRepositoryException('Invalid repository: %s' % self.build.project.repository)
+            raise InvalidRepositoryException(
+                'Invalid repository: %s' % self.build.project.repository)
 
         self.build_src = '%s/src' % self.build_ve_path
 
-        output = run('git clone %s %s' % (''.join(self.build.project.repository.split('+')[1:]), self.build_src))
+        output = run('git clone %s %s' % (
+            ''.join(self.build.project.repository.split('+')[1:]),
+            self.build_src))
+
         return output.return_code == 0, output.return_code
 
     def get_repo_head_id(self):
         # FIXME: support multiple vcs types
         if not self.build.project.repository.startswith('git+'):
-            raise InvalidRepositoryException('Invalid repository: %s' % self.build.project.repository)
+            raise InvalidRepositoryException(
+                'Invalid repository: %s' % self.build.project.repository)
 
         self.build_src = '%s/src' % self.build_ve_path
         with cd(self.build_src):
@@ -105,13 +110,15 @@ class BuildRunner(object):
 
     def get_config(self):
         with cd(self.build_src):
-            remote_config_file = '%s/config' % self.build.project.config_dir
-            if not exists(remote_config_file):
-                raise InvalidConfigDirectoryException('Journey.conf not found: %s' % self.build.project.config_dir)
+            if not exists(self.build.project.config_file):
+                raise InvalidConfigDirectoryException(
+                    'Journey.conf not found: %s' % self.build.project.config_file)
 
             pwd = run('pwd')
             config_file = tempfile.NamedTemporaryFile()
-            get('%s/%s' % (pwd, remote_config_file), config_file.name)
+            get('%s/%s' % (pwd, self.build.project.config_file),
+                config_file.name)
+
             try:
                 self.config = yaml.load(config_file)
             except Exception, e:

@@ -1,15 +1,15 @@
-{% load i18n %}
+{%load i18n%}
 {% csrf_token %}
-
-{% for field in form %}
-    <div class="fieldWrapper">
-        {% if field.errors %}
-            <p>{{ field.errors }}</p>
-        {% endif %} 
-        <p>{{ field.help_text }}<br/>
-        {{ field }}</p>
-    </div>
-{% endfor %}
+{% if form.forms %}
+    {{ form.management_form }}
+    {% for fs in form.forms %}
+        {% with fs as form %}
+            {% include "formwizard/form.html" %}
+        {% endwith %}
+    {% endfor %}
+{% else %}
+    {% include "formwizard/form.html" %}
+{% endif %}
 
 {% if form_prev_step %}
 <button class="span-3" name="form_prev_step" value="{{ form_prev_step }}">{% trans "back" %}</button>

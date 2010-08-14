@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="utf-8" />
-<title>Journeyman</title>
+    <head>
+        <meta charset="utf-8" />
+        <title>Journeyman</title>
 
 <link rel="stylesheet" href="{{MEDIA_URL}}css/main.css" type="text/css" />
 <link rel="stylesheet" href="{{MEDIA_URL}}blueprint/screen.css" type="text/css" />
@@ -25,7 +25,7 @@ $(document).ready(function() {
 <body id="index" class="home">
 <div class="container">    
     <div id="header" class="span-24 last">
-    <h6><a href="{% url projects_overview %}">Journeyman</a> ></h6>
+    <h6><a href="{% url projects_list %}">Journeyman</a> ></h6>
     <hr/>
         <div class="span-8"><h1>{% block heading %}{% endblock %}</h1></div>
         <div class="span-16 last">{% block activities %}{% endblock %}</div>

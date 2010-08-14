@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Sweet, we're done!</h1>
+<p class="success"><img src="{{MEDIA_URL}}blueprint/plugins/buttons/icons/tick.png">{{project.name}} has been created!</p>
+
+<p><a href="{% url projects_detail project.id %}">Click here to see the project page</a></p>
+{% endblock %}

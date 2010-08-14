@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+
+{% block heading %}
+Projects
+{% endblock %}
+
+{% block activities %}
+<a class="button" href="{% url projects_create %}"> Create new project </a>
+{% endblock %}
+
+{% block content %}
+    <table>
+        <thead>
+            <th>Project</th>
+            <th>Last build</th>
+            <th>Last stable build</th>
+        </thead>
+        {% for object in object_list %}
+        <tr>
+            <td><a href="{% url projects_detail object.pk %}">
+                {{ object.name }}</a></td>
+            <td>
+                {% if object.last_build %}
+                <a href="{% url builds_detail object.last_build.pk %}">
+                    {{ object.last_build.started }}
+                s</a>
+                {% else %}
+                    no build available
+                {% endif %}
+            </td>
+            <td>
+                {% if object.last_stable_build %}
+                <a href="{% url builds_detail object.last_stable_build.pk %}">
+                    {{ object.last_stable_build.started }}
+                </a>
+                {% else %}
+                    no build available
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
