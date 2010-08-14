@@ -25,14 +25,15 @@ $(document).ready(function() {
 <body id="index" class="home">
 <div class="container">    
     <div id="header" class="span-24 last">
-    <h6>Journeyman ></h6>
+    <h6><a href="{% url projects_overview %}">Journeyman</a> ></h6>
     <hr/>
-    </div>
+        <div class="span-8"><h1>{% block heading %}{% endblock %}</h1></div>
+        <div class="span-16 last">{% block activities %}{% endblock %}</div>
     <div id="content" class="span-24 last">
-    {% block content %}
-    Content
-    {% endblock %}
+    {% block content %}{% endblock %}
     </div>
+    <hr />
+    <div class="prepend-22 span-2 last">loetwerk, 2010</div>
 </div>
 </body>
 </html>

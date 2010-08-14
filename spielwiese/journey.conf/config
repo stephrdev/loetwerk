@@ -14,3 +14,4 @@ test:
 
 options:
 - test-results: nosetests.xml
+- shell-root: spielwiese/

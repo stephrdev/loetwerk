@@ -2,7 +2,7 @@ body {
     font-family: "Garamond", "Hoefler Text", "Times New Roman", "Times", serif !important; 
 }
 
-p {
+p, ul {
     font-size: 150% !important;
 }
 
@@ -18,3 +18,7 @@ textarea, input {
 textarea {
     font-size: 150% !important;
 }
+
+.unknown    { padding: .8em; margin-bottom: 1em; border: 2px solid #ddd; }
+.unknown-box, .unknown    { background: #ddd; color: #333; border-color: #999; }
+.unknown-box a, .unknown a  { color: #000; }

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block heading %}
+Overview
+{% endblock %}
+
+{% block activities %}
+<a class="button" href="{% url projects_create %}"> Create new project </a>
+{% endblock %}
+
+{% block content %}
+
+<ul class="span-24 last" style="list-style:none;padding:0;line-height:3em">
+{% for project in projects %}{{forloop.counter1}}
+<li class="span-6 {% if forloop.counter == 4 %}last{% endif %}">
+    {{project.id}} 
+    <a href="{% url projects_detail project.id %}">{{project.name}}</a>             
+    {{project.get_state}}
+</li>
+{% empty %}
+No projects
+{% endfor %}
+</ul>
+</div>
+{% endblock %}

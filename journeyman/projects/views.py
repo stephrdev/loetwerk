@@ -77,3 +77,16 @@ class ProjectWizard(SessionFormWizard):
         )
 
 create = ProjectWizard([RegisterRepository, BuildProcess, UploadJourneyConfig, JourneyConfiguration])
+
+def overview(request):
+    projects =  Project.objects.all()
+    print projects
+    return render_to_response("projects/overview.html", {"projects": projects}, RequestContext(request))
+    
+def detail(request, id):
+    project = Project.objects.get(pk=id)
+    return render_to_response("projects/detail.html", 
+                              {"project": project,
+                               "builds": project.build_set.all()}, 
+                              RequestContext(request))
+    

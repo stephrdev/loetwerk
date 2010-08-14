@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block heading %}{{project.name}}{% endblock %}
+{% block activities %}
+<a class="button">Build now</a> 
+<a class="button">Delete</a>
+{% endblock %}
+
+{% block content %}
+<dl class="span-8">
+   <df>Repository</df>
+   <dd>{{project.repository}}</dd>
+   <df>Polling strategy</df>
+   <dd>Every 5 minutes</dd>
+</dl>    
+<dl class="append-8 span-8 last">
+   <df>Repository</df>
+   <dd>{{project.repository}}</dd>
+   <df>Polling strategy</df>
+   <dd>Every 5 minutes</dd>
+</dl>
+
+<h2>Latest build</h2>
+{% if builds %}
+{% with builds.0 as last_build %}
+<div class="{{last_build.state_css_class}}">
+    {{ last_build.node }}
+    {{ last_build.revision }}
+</div>
+{% endwith %}
+{% else % }
+{% endif %}
+<h2>All builds</h2>
+<ul>
+{% for build in builds %}
+    <li>{{build}}</li>
+{% empty %}
+    <li class="notice"> No builds so far </li>
+{% endfor %}
+</ul>
+
+{% endblock %}

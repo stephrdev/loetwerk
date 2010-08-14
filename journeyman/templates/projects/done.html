@@ -2,8 +2,7 @@
 
 {% block content %}
 <h1>Sweet, we're done!</h1>
-<p>{{project}}
-{{project.id}}-{{project.name}}
+<p class="success"><img src="{{MEDIA_URL}}blueprint/plugins/buttons/icons/tick.png">{{project.name}} has been created!</p>
 
-Let's see if that actually works: [link to project site]</p>
+<p><a href="{% url projects_detail project.id %}">Click here to see the project page</a></p>
 {% endblock %}
