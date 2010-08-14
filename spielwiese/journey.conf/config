@@ -1,0 +1,13 @@
+dependencies:
+    requirements.txt
+    requirements-opt.txt
+    
+install:
+    python setup.py install
+
+test-prepare:
+    cd testapp
+    python manage.py syncdb
+    
+test:
+    python setup.py test
