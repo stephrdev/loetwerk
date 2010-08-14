@@ -80,6 +80,7 @@ INSTALLED_APPS = (
     'ghettoq',
     'south',
     'projects',
+    'workers',
 )
 
 import djcelery
