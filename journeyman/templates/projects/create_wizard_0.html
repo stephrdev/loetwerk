@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+    <h1>Let's get to know each other!</h1>
+
+    We'll need a few informations to get you started.
+
+    <form action="." method="post">
+        {% include "formwizard/wizard.html" %}
+    </form>
+{% endblock %}
