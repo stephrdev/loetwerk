@@ -76,9 +76,18 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.admin',
+    'djcelery',
+    'ghettoq',
     'south',
     'projects',
 )
+
+import djcelery
+djcelery.setup_loader()
+
+CARROT_BACKEND = 'ghettoq.taproot.Database'
+CELERY_RESULT_BACKEND = 'database'
+CELERY_DEFAULT_EXCHANGE = "tasks"
 
 try:
     from local_settings import *
