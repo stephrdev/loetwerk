@@ -32,6 +32,7 @@ class BuildRunner(object):
             self.build = build
 
     def run_step(self, name, task, *args, **kwargs):
+        step_starttime = datetime.now()
         stdout = StringIO()
         stderr = StringIO()
         sys.stdout = stdout
@@ -49,6 +50,8 @@ class BuildRunner(object):
         self.build.buildstep_set.create(
             name=name,
             successful=result[0],
+            started=step_starttime,
+            finished=datetime.now(),
             extra = json.dumps({
                 'return_code': return_code,
                 'exception_message': result[1],

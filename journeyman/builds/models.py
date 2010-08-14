@@ -4,6 +4,7 @@ from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
 
 class BUILD_STATES(Options):
+    QUEUED = "queued"
     RUNNING = "running"
     FAILED = "failed"
     UNSTABLE = "unstable"
@@ -14,17 +15,27 @@ class Build(models.Model):
     project = models.ForeignKey(Project)
     node = models.ForeignKey(BuildNode)
     revision = models.CharField(max_length=255, blank=True)
-    
+
     started = models.DateTimeField(null=True, blank=True)
     finished = models.DateTimeField(null=True, blank=True)
-    
-    state = models.CharField(max_length=20, default=BUILD_STATES.UNKNOWN, choices=BUILD_STATES.choices())
-    
+
+    state = models.CharField(max_length=20, default=BUILD_STATES.UNKNOWN,
+        choices=BUILD_STATES.choices())
+
+    def __unicode__(self):
+        return u'%s/%s/%s (%s)' % (self.project, self.node, self.state,
+            self.started)
+
 class BuildStep(models.Model):
     build = models.ForeignKey(Build)
-    
+
+    started = models.DateTimeField(null=True, blank=True)
+    finished = models.DateTimeField(null=True, blank=True)
+
     name = models.CharField(max_length=255)
     successful = models.BooleanField()
     extra = JSONField()
-    
-    
+
+    def __unicode__(self):
+        return '%s/%s' % (self.build,
+            'successful' if self.successful else 'failed')
