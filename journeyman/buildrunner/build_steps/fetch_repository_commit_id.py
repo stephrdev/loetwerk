@@ -1,5 +1,7 @@
 from fabric.api import run, cd
 
+from __future__ import with_statement
+
 from journeyman.buildrunner.registry import registry
 
 def fetch_repository_commit_id(build_runner, **kwargs):

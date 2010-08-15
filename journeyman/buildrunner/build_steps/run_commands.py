@@ -1,5 +1,7 @@
 from fabric.api import run, cd, prefix
 
+from __future__ import with_statement
+
 from journeyman.buildrunner.registry import registry
 
 def run_commands(build_runner, **kwargs):
