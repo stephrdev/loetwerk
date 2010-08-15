@@ -1,9 +1,9 @@
+from __future__ import with_statement
+
 import yaml, tempfile
 
 from fabric.api import run, cd, get
 from fabric.contrib.files import exists
-
-from __future__ import with_statement
 
 from journeyman.buildrunner.registry import registry
 

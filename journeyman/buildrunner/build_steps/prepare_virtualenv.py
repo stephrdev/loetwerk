@@ -1,7 +1,7 @@
+from __future__ import with_statement
+
 import tempfile
 from fabric.api import run
-
-from __future__ import with_statement
 
 from journeyman.buildrunner.registry import registry
 
