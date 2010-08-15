@@ -25,14 +25,10 @@ class BuildTask(Task):
 
             return True
         except Exception, exc:
-            # Something went wrong. Retry.
-            try:
-                self.retry([build_id,], kwargs)
-            except Task.MaxRetriesExceededError, exc:
-                build = Build.objects.get(pk=build_id)
-                build.state = BuildState.FAILED
-                build.finished = datetime.now()
-                build.save()
+            build = Build.objects.get(pk=build_id)
+            build.state = BuildState.FAILED
+            build.finished = datetime.now()
+            build.save()
 
 # Register with celery.
 tasks.register(BuildTask)
