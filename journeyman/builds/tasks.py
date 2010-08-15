@@ -1,7 +1,5 @@
 from celery.task import Task
 from celery.registry import tasks
-from journeyman.builds.models import Build
-from journeyman.buildrunner import BuildRunner
 
 class BuildTask(Task):
     default_retry_delay = 10
@@ -10,6 +8,8 @@ class BuildTask(Task):
     def run(self, build_id, **kwargs):
         logger = self.get_logger(**kwargs)
         try:
+            from journeyman.buildrunner import BuildRunner
+            from journeyman.builds.models import Build
             build = Build.objects.get(pk=build_id)
             logger.info('[%s] - running build..' % build)
             build_runner = BuildRunner(build)

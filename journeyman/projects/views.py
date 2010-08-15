@@ -1,11 +1,14 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-
+from django.http import HttpResponse
 from formwizard.forms import SessionFormWizard
 
 from journeyman.projects.models import Project
 from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
     JourneyConfigOutputForm, JourneyConfigFileForm, ProjectForm
+
+from journeyman.workers.models import BuildNode
+from django.views.decorators.csrf import csrf_exempt
 
 template_config = """build:
 - dependencies[fetch_pip_dependencies]
@@ -105,3 +108,14 @@ def edit(request, project_id):
         'object': project,
         'form': form,
     }, context_instance=RequestContext(request))
+
+@csrf_exempt
+def wh_post_commit(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    for node in BuildNode.objects.filter(active=True):
+        build = project.build_set.create(
+            node=node
+        )
+        build.queue_build()
+    return HttpResponse('{"status": "success"}', mimetype="application/json")
