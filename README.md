@@ -16,7 +16,7 @@ Journeyman currently focusses on use with Python projects, as it will do the fol
 
 Journey files consist of named rules and steps that are formulated in YAML.
 
-Let's take a look into such a journey file::
+Let's take a look into such a journey file:
 
     build:
     - dependencies
@@ -36,7 +36,7 @@ Let's take a look into such a journey file::
     fetch_results[fetch_xunit_results]:
     - spielwiese/nosetests.xml
     
-The journey build runner uses this file to determine the steps in a build. Journeyman will always look for a "build"-rule, if it does not exist, try to execute a default build rule::
+The journey build runner uses this file to determine the steps in a build. Journeyman will always look for a "build"-rule, if it does not exist, try to execute a default build rule:
 
     build:
     - dependencies
@@ -51,7 +51,7 @@ To execute a rule, journeyman will follow the steps in the build rule and run th
 
 Rules can optionally use square brackets to specify a plugin to run the steps defined in them. When no plugin was specified, it is assumed that the steps are shell commands and will by run by the plugin "run_commands".
 
-Journeyman comes with the following plugins::
+Journeyman comes with the following plugins:
 
 - run_commands
     * Runs every single command step, if one of the steps fails i.e. return code != 0, the build fails and execution ends immediately
@@ -63,6 +63,7 @@ Journeyman comes with the following plugins::
     * Given one path to an xml unittest file per step, this plugin will download the file and thus allow to see the unittest results in the build results view.
 
 Features:
+
 * Add build configuration to project repository and let journeyman take care of the rest
 * When you don't have access to the repository, the build server can save your journey script and use it when appropriate
 * Support for xUnit XML test results
