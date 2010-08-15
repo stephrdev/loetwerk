@@ -61,13 +61,14 @@ class BuildRunner(object):
         # Hand over control to the step runner
         result = self.run_all_steps()
 
-        # By default, we assume a stable state
-        self.build.state = BuildState.STABLE
-
-        # Look for build results to check for another state.
-        for build_result in self.build.buildresult_set.all():
-            if build_result.buildstate != BuildState.STABLE:
-                self.build.state = build_result.buildstate
+        # Look for failed steps.
+        if self.build.buildstep_set.filter(successful=False).count() > 0:
+            self.build.state = BuildState.FAILED
+        else:
+            # Look for build results if all build steps where successful.
+            for build_result in self.build.buildresult_set.all():
+                if build_result.buildstate != BuildState.STABLE:
+                    self.build.state = build_result.buildstate
 
         # Save the revision, we tested against and the finished timestamp.
         self.build.revision = self.repo_head_id
