@@ -28,18 +28,20 @@ class Build(models.Model):
         choices=BuildState.choices())
 
     def state_css_class(self):
+        # Determine the correct css class
         if self.state == BuildState.STABLE:
-            return "success"
+            return 'success'
         elif self.state in [BuildState.QUEUED, BuildState.RUNNING]:
-            return "notice"
+            return 'notice'
         else: 
-            return "error"
+            return 'error'
 
     def __unicode__(self):
         return u'%s/%s/%s (%s)' % (self.project, self.node, self.state,
             self.started)
 
     def queue_build(self):
+        # Create a celery task and set the state to QUEUED
         BuildTask.delay(self.pk)
         self.state = BuildState.QUEUED
         self.save()
@@ -62,25 +64,31 @@ class BuildStep(models.Model):
         return '%s/%s' % (self.build, self.state)
     
     def state_css_class(self):
+        # Return a css class according to state of the step
         if self.successful:
-            return "success"
+            return 'success'
         else:
-            return "error"
+            return 'error'
 
     @property
     def state(self):
+        # Return a name according to the state
         return 'successful' if self.successful else 'failed'
 
     def return_code(self):
+        # Return the return_code or None
         return dict(self.extra).get('return_code', None)
 
     def stdout(self):
+        # Return the stdout buffer or None
         return dict(self.extra).get('stdout', None)
 
     def stderr(self):
+        # Return the stderr buffer or None
         return dict(self.extra).get('stderr', None)
 
     def exception_message(self):
+        # Return the exception message of the step or None
         return dict(self.extra).get('exception_message', None)
 
 class BuildResult(models.Model):
@@ -93,6 +101,7 @@ class BuildResult(models.Model):
 
     @property
     def buildstate(self):
+        # The build state should be FAILED of anything went wrong.
         if int(self.get_testsuites()[0].failures) > 0 \
             or int(self.get_testsuites()[0].failures) > 0:
             return BuildState.FAILED
@@ -100,12 +109,18 @@ class BuildResult(models.Model):
             return BuildState.STABLE
 
     def get_testsuites(self):
+        # Create a list of testsuites.
         suites = []
+        # Create a stream of xml data.
         s = StringIO(str(self.body))
+        # Parse the xml stream.
         root = etree.parse(s)
+        # Walk through the xml tree
         for item in root.findall('.'):
+            # New testsuite.
             ts = TestSuite(item.attrib)
             suites.append(ts)
+            # Walk through tests
             for test in item.iterchildren():
                 t = Test(test.attrib)
                 ts.testclasses.setdefault(
@@ -115,6 +130,7 @@ class BuildResult(models.Model):
                 tc = ts.testclasses[test.attrib['classname']]
                 tc.tests.append(t)
                 tc.test += 1
+                # Append errors and messages.
                 for message in test.iterchildren():
                     if message.tag == "error":
                         t.error = True
@@ -124,6 +140,7 @@ class BuildResult(models.Model):
                         tc.failure += 1
                     m = Message(message.text, message.attrib)
                     t.messages.append(m)
+        # Return a list of test suites.
         return suites
 
 class TestSuite(object):
@@ -156,4 +173,3 @@ class Message(object):
 
     def __unicode__(self):
         return str(self.__dict__)
-
