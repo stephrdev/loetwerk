@@ -144,6 +144,9 @@ class BuildRunner(object):
                     registry.get_step(plugin or 'run_commands'), {
                     'lines':self.config[step_name]}))
 
+            steps.append(('tear down virtualenv',
+                registry.get_step('teardown_virtualenv')))
+
             # Execute the second round of steps.
             result = _execute_steps(steps)
             # Any errors? Return them!
