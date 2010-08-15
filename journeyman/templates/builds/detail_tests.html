@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block heading %}unittest results{% endblock %}
+
+{% block content %}
+    <div class="span-24 last">
+           <div class="span-24 last">
+                <div class="prepend-18 span-2">
+                    tests
+                </div>
+                <div class="span-2">
+                    failures
+                </div>
+                <div class="span-2 last">
+                    errors
+                </div>
+            </div>
+        {% for suite in suites %}
+        <div class="span-24 last">
+            <div class="span-24 opener suite">
+                <div class="span-18 title
+                {% if suite.failures %}failure-box{% endif %}
+                {% if suite.errors %}error-box{% endif %}
+                ">
+                    {{suite.name}}
+                </div>
+                <div class="span-2">
+                    {{suite.tests}} 
+                </div>
+                <div class="span-2">
+                    <strong>{{suite.failures}}</strong>
+                </div>
+                <div class="span-2 last">
+                    <strong>{{suite.errors}}</strong>
+                </div>
+            </div>
+            {% for testcase in suite.testcases %}
+            <div class="span-24 toopen">
+                <div class="span-1">&nbsp;</div>
+                <div class="span-17
+                {% if testcase.failure %}failure-box{% endif %}
+                {% if testcase.error %}error-box{% endif %}
+                ">{{testcase.name}}</div>
+                <div class="span-2">
+                    &nbsp;
+                </div>
+                <div class="span-2">
+                    {% if testcase.failure %}X{%else%}&nbsp;{% endif %}
+                </div>
+                <div class="span-2 last">
+                    {% if testcase.error %}X{% endif %}
+                </div>
+                
+                
+                <div class="prepend-2 span-16">{% for message in testcase.messages %}
+                    <span class="short opener"><strong>{{message.type}}</strong>
+                    {{message.message}}</span>
+                    <div class="hide toopen">
+                        <pre>{{message.content}}</pre>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+<script typ="text/javascript">
+$(".opener").siblings('.toopen').hide();
+$(".opener").click(function() { $(this).siblings('.toopen').toggle() });
+</script>    
+
+{% endfor %}
+
+{% endblock %}
