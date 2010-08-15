@@ -2,6 +2,7 @@ build:
 - dependencies
 - install
 - test
+- testresults
 
 install:
 - cd spielwiese && python setup.py install
