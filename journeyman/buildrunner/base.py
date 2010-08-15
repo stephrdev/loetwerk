@@ -70,6 +70,7 @@ class BuildRunner(object):
             for build_result in self.build.buildresult_set.all():
                 if build_result.buildstate != BuildState.STABLE:
                     self.build.state = build_result.buildstate
+            self.build.state = BuildState.STABLE
 
         # Save the revision, we tested against and the finished timestamp.
         self.build.revision = self.repo_head_id
