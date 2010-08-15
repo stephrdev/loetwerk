@@ -1,4 +1,4 @@
-import sys, tempfile
+import sys, tempfile, traceback
 from StringIO import StringIO
 from datetime import datetime
 
@@ -129,8 +129,12 @@ class BuildRunner(object):
             output, return_code = task(self, **kwargs)
             result = (output, None)
         except (SystemExit, Exception), ex:
+            exceptionType, exceptionValue, exceptionTraceback = sys.exc_info()
+            exc =  "".join(traceback.format_tb(exceptionTraceback))
+            exc += " ".join((str(exceptionType), str(exceptionValue)))
+            
             output, return_code = '', 1
-            result = (False, ('%s: %s' % (ex.__class__.__name__, ex.message)))
+            result = (False, exc)
         finally:
             sys.stdout = sys.__stdout__
             sys.stderr = sys.__stderr__
