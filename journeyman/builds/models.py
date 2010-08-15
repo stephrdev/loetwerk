@@ -20,6 +20,7 @@ class Build(models.Model):
     project = models.ForeignKey(Project)
     node = models.ForeignKey(BuildNode)
     revision = models.CharField(max_length=255, blank=True)
+    short_revision = models.CharField(max_length=255, blank=True)
 
     started = models.DateTimeField(null=True, blank=True)
     finished = models.DateTimeField(null=True, blank=True)
