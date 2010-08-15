@@ -30,23 +30,22 @@ Projects
                     no build available
                 {% endif %}
             </td>
-            {% if object.last_stable_build %}
-                <td>
-                    <a href="{% url builds_detail object.last_stable_build.pk %}">
-                        {{ object.last_stable_build.started }}
-                    </a>
-                </td>
-                <td>
-                    {{ object.last_stable_build.state }}
-                </td>
-            {% else %}
-                <td>
+            <td>
+                {% if object.last_stable_build %}
+                <a href="{% url builds_detail object.last_stable_build.pk %}">
+                    {{ object.last_stable_build.started }}
+                </a>
+                {% else %}
                     no build available
-                </td>
-                <td>
+                {% endif %}
+            </td>
+            <td>
+                {% if object.last_build %}
+                    {{ object.last_build.state }}
+                {% else %}
                     unknown
-                </td>
-            {% endif %}
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </table>
