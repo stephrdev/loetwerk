@@ -59,7 +59,7 @@ class CreateProjectWizard(SessionFormWizard):
                 'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
                 'dependencies': ymlize_list(form.cleaned_data['dependencies']),
             })
-            print conf
+
             # Write the config to extra context.
             self.update_extra_context({'config_file': conf})
 
@@ -76,7 +76,6 @@ class CreateProjectWizard(SessionFormWizard):
 
         # And add the config data + save.
         project.config_data = self.get_extra_context().get('config_file', '')
-        print project.config_data
         project.save()
 
         # Return a nice info page.

@@ -13,7 +13,6 @@ def create(request, project_id):
     project = get_object_or_404(Project, pk=project_id)
     
     build = None
-    print dir(request)
     # Look for available nodes.
     for node in BuildNode.objects.filter(active=True):
         # Add a build for every node.
@@ -26,7 +25,6 @@ def create(request, project_id):
     
     if not build:
         messages.add_message(request, messages.ERROR, "No build server available")
-        print request._messages
         return redirect('projects_detail', project.pk)
     # Return to the build detail page.
     return redirect('builds_detail', build_id=build.pk)
