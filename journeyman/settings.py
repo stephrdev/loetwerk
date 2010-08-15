@@ -100,7 +100,7 @@ djcelery.setup_loader()
 
 CARROT_BACKEND = 'ghettoq.taproot.Database'
 CELERY_RESULT_BACKEND = 'database'
-CELERY_DEFAULT_EXCHANGE = "tasks"
+CELERY_DEFAULT_EXCHANGE = 'tasks'
 CELERY_DEFAULT_QUEUE = 'tasks'
 CELERY_QUEUES = {
     'tasks': {'exchange': 'tasks'},

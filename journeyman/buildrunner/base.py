@@ -47,6 +47,9 @@ class BuildRunner(object):
         env.host_string = self.build.node.host
 
     def run_build(self):
+        # Maybe the last try failed, remove old results.
+        self.build.buildstep_set.all().delete()
+
         # Set a timestamp when starting a build an change the build state
         self.build.started = datetime.now()
         self.build.state = BuildState.RUNNING
@@ -126,14 +129,16 @@ class BuildRunner(object):
             for step in self.config['build']:
                 # We need to check for a explicit command, not none available
                 # use the run_commands plugin.
-                plugin = step.split('[')[1][:-1] \
-                    if len(step.split('[')) == 2 else 'run_commands'
+                plugin = self.config['build_plugins'].get(step, None)
+
+                # Get the real name of the step (including plugin)
+                step_name = '%s[%s]' % (step, plugin) if plugin else step
+                step_plugin = plugin or 'run_commands'
 
                 # Append the step to the list of steps.
-                steps.append(('execute step %s (%s)' % (
-                    step.split('[')[0], plugin),
-                    registry.get_step(plugin
-                ), {'lines': self.config[step]}))
+                steps.append(('execute step %s (%s)' % (step, step_plugin),
+                    registry.get_step(plugin or 'run_commands'), {
+                    'lines':self.config[step_name]}))
 
             # Execute the second round of steps.
             result = _execute_steps(steps)

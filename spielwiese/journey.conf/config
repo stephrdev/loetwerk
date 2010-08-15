@@ -1,8 +1,8 @@
 build:
-- dependencies[fetch_pip_dependencies]
+- dependencies
 - install
-- test[run_tests]
-- testresults[fetch_xunit_results]
+- test
+- testresults
 
 dependencies[fetch_pip_dependencies]:
 - spielwiese/requirements.txt

@@ -64,7 +64,7 @@ def autodiscover():
             continue
 
         # Load to build steps module to trigger the register call.
-        import_module("%s.build_steps" % app)
+        import_module('%s.build_steps' % app)
     LOADING = False
 
 # Just do the autodiscovery.
