@@ -81,12 +81,14 @@ class BuildStep(models.Model):
         return dict(self.extra).get('return_code', None)
 
     def stdout(self):
-        # Return the stdout buffer or None
-        return dict(self.extra).get('stdout', None)
+        # Return the stdout buffer or None, remove [hostname]
+        souts = dict(self.extra).get('stdout', None).split('\n')
+        return "\n".join(s[s.index(']')+1:] if ']' in s else s for s in souts)
 
     def stderr(self):
-        # Return the stderr buffer or None
-        return dict(self.extra).get('stderr', None)
+        # Return the stderr buffer or None, remove [hostname]
+        serrs = dict(self.extra).get('stderr', None).split('\n')
+        return "\n".join(s[s.index(']')+1:] if ']' in s else s for s in serrs)
 
     def exception_message(self):
         # Return the exception message of the step or None
