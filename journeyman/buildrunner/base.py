@@ -97,18 +97,12 @@ class BuildRunner(object):
             steps = []
 
             for step in self.config['build']:
-                if step == 'dependencies':
-                    steps.append(('fetch dependencies',
-                        registry.get_step('fetch_dependencies')))
-                elif step == 'testresults':
-                    steps.append(('fetch xunit results',
-                        registry.get_step('fetch_xunit_results')))
-                else:
-                    steps.append(('execute step %s' % step,
-                        registry.get_step('run_commands'), {
-                            'commands': self.config[step],
-                            'allow_fail': step == 'test',
-                        }))
+                plugin = step.split('[')[1][:-1] if len(step.split('[')) == 2 else 'run_commands'
+
+                steps.append(('execute step %s (%s)' % (step.split('[')[0], plugin),
+                    registry.get_step(plugin), {
+                        'lines': self.config[step],
+                    }))
 
             result = _execute_steps(steps)
             if not result:

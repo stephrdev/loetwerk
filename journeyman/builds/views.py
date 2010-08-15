@@ -18,9 +18,7 @@ def create(request, project_id):
             project=project,
             node=node
         )
-        BuildTask.delay(build.pk)
-        build.state = BuildState.QUEUED
-        build.save()
+        build.queue_build()
 
     return redirect('projects_detail', project_id=project_id)
 

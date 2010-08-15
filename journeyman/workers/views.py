@@ -1,5 +1,6 @@
 from django.shortcuts import redirect, render_to_response, get_object_or_404
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 from .models import BuildNode
 from .forms import WorkerForm
 
@@ -20,6 +21,7 @@ def list(request):
         'object_list': BuildNode.objects.filter(active=True)
     }, context_instance=RequestContext(request))
 
+@login_required
 def detail(request, worker_id=None):
     node = get_object_or_404(BuildNode, pk=worker_id)
 

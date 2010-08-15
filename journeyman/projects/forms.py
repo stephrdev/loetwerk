@@ -21,8 +21,8 @@ class BuildProcessForm(forms.Form):
         widget=forms.Textarea(attrs={'rows':3, 'cols':40}),
         help_text="Please enter a list of pip requirement files that you \
         have used to specify your dependencies")
-
     test_xmls = forms.CharField(required=False,
+        widget=forms.Textarea(attrs={'rows':3, 'cols':40}),
         help_text="Please enter a whitespace separated list of paths of \
         unit test result xmls.")
 

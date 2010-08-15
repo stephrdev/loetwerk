@@ -2,6 +2,7 @@ from django.db import models
 from journeyman.workers.models import BuildNode
 from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
+from journeyman.builds.tasks import BuildTask
 
 class BuildState(Options):
     QUEUED = 'queued'
@@ -33,6 +34,11 @@ class Build(models.Model):
     def __unicode__(self):
         return u'%s/%s/%s (%s)' % (self.project, self.node, self.state,
             self.started)
+
+    def queue_build(self):
+        BuildTask.delay(self.pk)
+        self.state = BuildState.QUEUED
+        self.save()
 
     @property
     def build_steps(self):

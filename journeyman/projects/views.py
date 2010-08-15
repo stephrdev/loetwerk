@@ -1,29 +1,37 @@
 from django.template import RequestContext
 from django.shortcuts import render_to_response, get_object_or_404, redirect
-
+from django.http import HttpResponse
 from formwizard.forms import SessionFormWizard
 
 from journeyman.projects.models import Project
 from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
     JourneyConfigOutputForm, JourneyConfigFileForm, ProjectForm
 
+from journeyman.workers.models import BuildNode
+from django.views.decorators.csrf import csrf_exempt
+
 template_config = """build:
-- dependencies
+- dependencies[fetch_pip_dependencies]
 - install
-- test
+- test[run_tests]
+- testresults[fetch_xuint_results]
+
+dependencies[fetch_pip_dependencies]:
+%(dependencies)s
 
 install:
 %(install)s
 
-test:
+test[run_tests]:
 %(test)s
 
-options:
-    unittest-xml-results: %(test_xmls)s
-    pip-dependencies: %(dependencies)s
+testresults[fetch_xunit_results]:
+%(test_xmls)s
 """
 
 def ymlize_list(text):
+    if not text:
+        return ""
     yml_steps = []
     for line in text.split('\r\n'):
         yml_steps.append("- " + line)
@@ -42,10 +50,10 @@ class CreateProjectWizard(SessionFormWizard):
             test_steps = ymlize_list(form.cleaned_data['test_steps'])
 
             conf = template_config % {
-                'install': build_steps, 
-                'test': test_steps, 
-                'test_xmls': form.cleaned_data['test_xmls'],
-                'dependencies': form.cleaned_data['dependencies']
+                'install': ymlize_list(form.cleaned_data['build_steps']),
+                'test': ymlize_list(form.cleaned_data['test_steps']), 
+                'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
+                'dependencies': ymlize_list(form.cleaned_data['dependencies']),
             }
             self.update_extra_context({'config_file': conf})
 
@@ -100,3 +108,14 @@ def edit(request, project_id):
         'object': project,
         'form': form,
     }, context_instance=RequestContext(request))
+
+@csrf_exempt
+def wh_post_commit(request, project_id):
+    project = get_object_or_404(Project, pk=project_id)
+
+    for node in BuildNode.objects.filter(active=True):
+        build = project.build_set.create(
+            node=node
+        )
+        build.queue_build()
+    return HttpResponse('{"status": "success"}', mimetype="application/json")

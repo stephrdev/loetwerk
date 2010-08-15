@@ -1,3 +1,5 @@
+from __future__ import with_statement
+
 import yaml, tempfile
 
 from fabric.api import run, cd, get
@@ -39,16 +41,20 @@ def fetch_config(build_runner, **kwargs):
 
     if 'options' not in build_runner.config:
         build_runner.config['options'] = {}
-    if 'dependencies' in build_runner.config:
-        raise InvalidConfigException(
-            'build step dependencies is reserved')
 
     if 'build' not in build_runner.config:
-        build_runner.config['build'] = ['dependencies', 'install', 'test',
-            'testresults']
+        build_runner.config['build'] = [
+            'dependencies[fetch_pip_dependencies]',
+            'install',
+            'test[run_tests]',
+            'testresults[fetch_xunit_results]'
+        ]
+
+    build_runner.config['build_names'] = [k.split('[')[0]
+        for k in build_runner.config['build']]
 
     if not set(build_runner.config['build']).issubset(
-        set(build_runner.config.keys() + ['dependencies', 'testresults'])):
+        set(build_runner.config.keys())):
         raise InvalidConfigException(
             'some build steps are not configured')
 

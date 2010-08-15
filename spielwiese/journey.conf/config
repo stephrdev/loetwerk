@@ -1,15 +1,17 @@
 build:
-- dependencies
+- dependencies[fetch_pip_dependencies]
 - install
-- test
-- testresults
+- test[run_tests]
+- testresults[fetch_xunit_results]
+
+dependencies[fetch_pip_dependencies]:
+- spielwiese/requirements.txt
 
 install:
 - cd spielwiese && python setup.py install
 
-test:
+test[run_tests]:
 - cd spielwiese && nosetests --with-xunit
 
-options:
-    unittest-xml-results: spielwiese/nosetests.xml
-    pip-dependencies: spielwiese/requirements.txt
+testresults[fetch_xunit_results]:
+- spielwiese/nosetests.xml
