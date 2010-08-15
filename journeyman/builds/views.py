@@ -17,7 +17,7 @@ def create(request, project_id):
         )
         build.queue_build()
 
-    return redirect('projects_detail', project_id=project_id)
+    return redirect('builds_detail', build_id=build.pk)
 
 def detail(request, build_id):
     build = get_object_or_404(Build, pk=build_id)

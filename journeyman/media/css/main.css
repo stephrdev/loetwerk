@@ -78,3 +78,7 @@ form p {
 form ul {
     margin-bottom: 0px;
 }
+
+body pre {
+    font:1em 'andale mono','lucida console',monospace;
+}

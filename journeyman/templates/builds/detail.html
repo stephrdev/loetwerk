@@ -3,6 +3,9 @@
 {% block heading %}{{ object.project }}{% endblock %}
 
 {% block activities %}
+    <a class="button" href="{% url builds_detail_tests object.pk %}">
+        Test results
+    </a>
     <a class="button" href="{% url builds_delete object.pk %}">Delete</a>
 {% endblock %}
 
@@ -26,25 +29,32 @@
     <hr>
     <h2>Build log</h2>
     {% for step in object.build_steps %}
-        <div class="span-2 {{ step.state_css_class }}-box" id="build-step-{{step_id}}">
-             {% if step.successful %}success{% else %}fail{% endif %}
+    <div>
+        <div class="opener">
+            <div class="span-2 {{ step.state_css_class }}-box" 
+                 id="build-step-{{step_id}}">
+                 {% if step.successful %}success{% else %}fail{% endif %}
+            </div>
+            <div class="span-22 last" id="build-step-{{step_id}}">
+            <h3>{{ step.name }}</h3>
+            </div>
         </div>
-        <div class="span-22 last" id="build-step-{{step_id}}">
-        <h3>{{ step.name }}</h3>
-        </div>         
-        <div class="prepend-2 append-bottom span-22">
-        {% if step.exception_message %}
-        <h4>Exception</h4>
-        <pre>{{ step.exception_message }}</pre>
-        {% endif %}
-        {% if step.stdout %}
-        <h4>stdout</h4>
-        <pre>{{ step.stdout }}</pre>
-        {% endif %}
-        {% if step.stderr %}
-        <h4>stderr</h4>
-        <pre>{{ step.stderr }}</pre>
-        {% endif %}        
+        <div class="toopen">
+            <div class="prepend-2 append-bottom span-22 toopen">
+            {% if step.exception_message %}
+            <h4>Exception</h4>
+            <pre>{{ step.exception_message }}</pre>
+            {% endif %}
+            {% if step.stdout %}
+            <h4>stdout</h4>
+            <pre>{{ step.stdout }}</pre>
+            {% endif %}
+            {% if step.stderr %}
+            <h4>stderr</h4>
+            <pre>{{ step.stderr }}</pre>
+            {% endif %}        
+            </div>
         </div>
+    </div>
     {% endfor %}
 {% endblock %}
