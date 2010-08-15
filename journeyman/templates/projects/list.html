@@ -7,9 +7,12 @@ Projects
 
 {% block activities %}
 <a class="button" href="{% url projects_create %}">Add new project</a>
+<a class="button" href="{% url workers_list %}">Add new worker</a>
+
 {% endblock %}
 
 {% block content %}
+<div class="span-16">
     <table>
         <thead>
             <th>Project</th>
@@ -19,7 +22,7 @@ Projects
         </thead>
         {% for object in object_list %}
         <tr>
-            <td><a href="{% url projects_detail object.pk %}">
+            <td class="title"><a href="{% url projects_detail object.pk %}">
                 {{ object.name }}</a></td>
             <td>
                 {% if object.last_build %}
@@ -39,7 +42,7 @@ Projects
                     no build available
                 {% endif %}
             </td>
-            <td>
+            <td class="unknown-box {{object.last_build.state_css_class}}-box">
                 {% if object.last_build %}
                     {{ object.last_build.state }}
                 {% else %}
@@ -49,4 +52,23 @@ Projects
         </tr>
         {% endfor %}
     </table>
+</div>
+<div class="span-8 last">
+    <table>
+        <thead>
+            <th>Worker</th>
+        </thead>
+        {% for object in worker_object_list %}
+        <tr class="{% if object.active %}active{% else %}inactive{% endif %}">
+            <td class="title">
+                <a href="{% url workers_detail object.pk %}">
+                {{ object.name }}
+                </a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    
+</div>
 {% endblock %}

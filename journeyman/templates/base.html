@@ -18,8 +18,12 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-     $('textarea').autoResize({}).trigger('change');
+     $('textarea').autoResize({});
+     $(".opener").siblings('.toopen').hide();
+     $(".opener").click(function() { $(this).siblings('.toopen').toggle() });
 });
+
+
 </script>
 
 <body id="index" class="home">

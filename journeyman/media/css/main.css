@@ -48,17 +48,18 @@ textarea {
 .failure-box,
 .error-box,
 .notice-box,
-.success-box   { 
+.success-box,
+.unknown-box { 
     text-indent: 4px;
     font-variant: small-caps;
     letter-spacing: 1px;
     text-transform: lowercase;
 }
 
+.success-box    {background: #E6EFC2; color: #264409; border-color: #C6D880; }
 .notice-box, .failure-box    {background: #FFF6BF; color: #514721; border-color: #FFD324; }
 .error-box      {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
 
-.success-box    {background: #E6EFC2; color: #264409; border-color: #C6D880; }
 .error-box a    { color: #8a1f11; }
 .notice-box a   { color: #514721; }
 .success-box a  { color: #264409; }
@@ -77,4 +78,8 @@ form p {
 
 form ul {
     margin-bottom: 0px;
+}
+
+body pre {
+    font:1em 'andale mono','lucida console',monospace;
 }

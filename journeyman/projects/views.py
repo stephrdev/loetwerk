@@ -76,7 +76,8 @@ create = CreateProjectWizard([RepositoryForm, BuildProcessForm, \
 
 def list(request):
     return render_to_response('projects/list.html', {
-        'object_list': Project.objects.filter(active=True)
+        'object_list': Project.objects.filter(active=True),
+        'worker_object_list': BuildNode.objects.all(),
     }, context_instance=RequestContext(request))
 
 def detail(request, project_id):

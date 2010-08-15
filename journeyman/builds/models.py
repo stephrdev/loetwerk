@@ -5,6 +5,7 @@ from journeyman.utils import JSONField, Options
 from journeyman.builds.tasks import BuildTask
 
 from lxml import etree
+from collections import defaultdict
 from StringIO import StringIO
 
 class BuildState(Options):
@@ -60,7 +61,6 @@ class BuildStep(models.Model):
     def __unicode__(self):
         return '%s/%s' % (self.build, self.state)
     
-    
     def state_css_class(self):
         if self.successful:
             return "success"
@@ -108,24 +108,40 @@ class BuildResult(models.Model):
             suites.append(ts)
             for test in item.iterchildren():
                 t = Test(test.attrib)
-                ts.testcases.append(t)
+                ts.testclasses.setdefault(
+                    test.attrib['classname'],   
+                    TestClass(test.attrib['classname'])
+                )
+                tc = ts.testclasses[test.attrib['classname']]
+                tc.tests.append(t)
+                tc.test += 1
                 for message in test.iterchildren():
                     if message.tag == "error":
                         t.error = True
+                        tc.error += 1
                     elif message.tag == "failure":
                         t.failure = True
+                        tc.failure += 1
                     m = Message(message.text, message.attrib)
                     t.messages.append(m)
         return suites
 
 class TestSuite(object):
     def __init__(self, attrs):
-        self.testcases = []
+        self.testclasses = {}
         self.__dict__.update(**attrs)
 
     def __unicode__(self):
         return str(self.__dict__)
 
+class TestClass(object):
+    def __init__(self, name):
+        self.name = name
+        self.tests = []
+        self.error = 0
+        self.failure = 0
+        self.test = 0
+    
 class Test(object):
     def __init__(self, attrs):
         self.messages = []
