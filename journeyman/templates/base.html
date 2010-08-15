@@ -3,42 +3,36 @@
     <head>
         <meta charset="utf-8" />
         <title>Journeyman</title>
+        <link rel="stylesheet" href="{{MEDIA_URL}}css/main.css" type="text/css" />
+        <link rel="stylesheet" href="{{MEDIA_URL}}blueprint/screen.css" type="text/css" />
+        <link rel="stylesheet" href="{{MEDIA_URL}}blueprint/plugins/buttons/screen.css" type="text/css" />
+        <!--[if IE]>
+        <link rel="stylesheet" href="{{MEDIA_URL}}blueprint/ie.css" type="text/css" />
+        <![endif]-->
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="{{MEDIA_URL}}js/jquery.resize.js"></script>
 
-<link rel="stylesheet" href="{{MEDIA_URL}}css/main.css" type="text/css" />
-<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/screen.css" type="text/css" />
-<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/plugins/buttons/screen.css" type="text/css" />
-
-<!--[if IE]>
-<link rel="stylesheet" href="{{MEDIA_URL}}blueprint/ie.css" type="text/css" />
-<![endif]-->
-</head>
-
-<script type="text/javascript" src="{{MEDIA_URL}}js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="{{MEDIA_URL}}js/jquery.resize.js"></script>
-
-<script type="text/javascript">
-$(document).ready(function() {
-     $('textarea').autoResize({});
-     $(".opener").siblings('.toopen').hide();
-     $(".opener").click(function() { $(this).siblings('.toopen').toggle() });
-});
-
-
-</script>
-
-<body id="index" class="home">
-<div class="container">    
-    <div id="header" class="span-24">
-    <h6><a href="{% url projects_list %}">Journeyman</a> ></h6>
-    </div>
-    <hr/>
-    <div class="span-8"><h1>{% block heading %}{% endblock %}</h1></div>
-    <div class="span-16 last activities">{% block activities %}{% endblock %}</div>
-    <div id="content" class="span-24 last">
-    {% block content %}{% endblock %}
-    </div>
-    <hr />
-    <div class="prepend-21 span-3 last" style="text-align: right">loetwerk, 2010</div>
-</div>
-</body>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                 $('textarea').autoResize({});
+                 $(".opener").siblings('.toopen').hide();
+                 $(".opener").click(function() { $(this).siblings('.toopen').toggle() });
+            });
+        </script>
+    </head>
+    <body id="index" class="home">
+        <div class="container">    
+            <div id="header" class="span-24">
+                <h6><a href="{% url projects_list %}">Journeyman</a> ></h6>
+            </div>
+            <hr/>
+            <div class="span-8"><h1>{% block heading %}{% endblock %}</h1></div>
+            <div class="span-16 last activities">{% block activities %}{% endblock %}</div>
+            <div id="content" class="span-24 last">
+                {% block content %}{% endblock %}
+            </div>
+            <hr />
+            <div class="prepend-21 span-3 last" style="text-align: right">loetwerk, 2010</div>
+        </div>
+    </body>
 </html>

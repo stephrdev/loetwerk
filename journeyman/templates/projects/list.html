@@ -1,73 +1,70 @@
 {% extends "base.html" %}
 
-
 {% block heading %}
-Projects
+    Projects
 {% endblock %}
 
 {% block activities %}
-<a class="button" href="{% url projects_create %}">Add new project</a>
-<a class="button" href="{% url workers_create %}">Add new worker</a>
+    <a class="button" href="{% url projects_create %}">Add new project</a>
+    <a class="button" href="{% url workers_create %}">Add new worker</a>
 {% endblock %}
 
 {% block content %}
-<div class="span-16">
-    <table>
-        <thead>
-            <th>Project</th>
-            <th>Last build</th>
-            <th>Last stable build</th>
-            <th>Current state</th>
-        </thead>
-        {% for object in object_list %}
-        <tr>
-            <td class="title"><a href="{% url projects_detail object.pk %}">
-                {{ object.name }}</a></td>
-            <td>
-                {% if object.last_build %}
-                <a href="{% url builds_detail object.last_build.pk %}">
-                    {{ object.last_build.started|timesince }} ago
-                </a>
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td>
-                {% if object.last_stable_build %}
-                <a href="{% url builds_detail object.last_stable_build.pk %}">
-                    {{ object.last_stable_build.started|timesince }} ago
-                </a>
-                {% else %}
-                    -
-                {% endif %}
-            </td>
-            <td class="unknown-box {{object.last_build.state_css_class}}-box">
-                {% if object.last_build %}
-                    {{ object.last_build.state }}
-                {% else %}
-                    unknown
-                {% endif %}
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-</div>
-<div class="span-8 last">
-    <table>
-        <thead>
-            <th>Worker</th>
-        </thead>
-        {% for object in worker_object_list %}
-        <tr class="{% if object.active %}active{% else %}inactive{% endif %}">
-            <td class="title">
-                <a href="{% url workers_detail object.pk %}">
-                {{ object.name }}
-                </a>
-            </td>
-        </tr>
-        {% endfor %}
-    </table>
-    
-    
-</div>
+    <div class="span-16">
+        <table>
+            <thead>
+                <th>Project</th>
+                <th>Last build</th>
+                <th>Last stable build</th>
+                <th>Current state</th>
+            </thead>
+            {% for object in object_list %}
+            <tr>
+                <td class="title"><a href="{% url projects_detail object.pk %}">
+                    {{ object.name }}</a></td>
+                <td>
+                    {% if object.last_build %}
+                    <a href="{% url builds_detail object.last_build.pk %}">
+                        {{ object.last_build.started|timesince }} ago
+                    </a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>
+                    {% if object.last_stable_build %}
+                    <a href="{% url builds_detail object.last_stable_build.pk %}">
+                        {{ object.last_stable_build.started|timesince }} ago
+                    </a>
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td class="unknown-box {{object.last_build.state_css_class}}-box">
+                    {% if object.last_build %}
+                        {{ object.last_build.state }}
+                    {% else %}
+                        unknown
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="span-8 last">
+        <table>
+            <thead>
+                <th>Worker</th>
+            </thead>
+            {% for object in worker_object_list %}
+            <tr class="{% if object.active %}active{% else %}inactive{% endif %}">
+                <td class="title">
+                    <a href="{% url workers_detail object.pk %}">
+                    {{ object.name }}
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

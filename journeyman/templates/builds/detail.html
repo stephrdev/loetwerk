@@ -10,7 +10,6 @@
 {% endblock %}
 
 {% block content %}
-
     <h2 class="{{object.state_css_class}}">
         {{ object.short_revision }} on {{ object.node.name }} {{ object.state}}
     </h2>
@@ -36,23 +35,23 @@
                  {% if step.successful %}success{% else %}fail{% endif %}
             </div>
             <div class="span-22 last" id="build-step-{{step_id}}">
-            <h3>{{ step.name }}</h3>
+                <h3>{{ step.name }}</h3>
             </div>
         </div>
         <div class="toopen">
             <div class="prepend-2 append-bottom span-22 toopen">
-            {% if step.exception_message %}
-            <h4>Exception</h4>
-            <pre>{{ step.exception_message }}</pre>
-            {% endif %}
-            {% if step.stdout %}
-            <h4>stdout</h4>
-            <pre>{{ step.stdout }}</pre>
-            {% endif %}
-            {% if step.stderr %}
-            <h4>stderr</h4>
-            <pre>{{ step.stderr }}</pre>
-            {% endif %}        
+                {% if step.exception_message %}
+                    <h4>Exception</h4>
+                    <pre>{{ step.exception_message }}</pre>
+                {% endif %}
+                {% if step.stdout %}
+                    <h4>stdout</h4>
+                    <pre>{{ step.stdout }}</pre>
+                {% endif %}
+                {% if step.stderr %}
+                    <h4>stderr</h4>
+                    <pre>{{ step.stderr }}</pre>
+                {% endif %}        
             </div>
         </div>
     </div>
