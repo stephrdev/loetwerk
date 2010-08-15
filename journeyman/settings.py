@@ -108,6 +108,10 @@ CELERY_QUEUES = {
 
 LOGIN_URL = '/admin/'
 
+import markdown
+README_HTML = markdown.markdown(
+    open(os.path.join(PROJECT_ROOT, '../README.md')).read())
+
 try:
     from local_settings import *
 except ImportError:

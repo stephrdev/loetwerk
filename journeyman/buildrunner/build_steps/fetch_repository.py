@@ -18,7 +18,7 @@ def fetch_repository(build_runner, **kwargs):
     build_runner.build_src = '%s/src' % build_runner.build_ve_path
 
     # Execute the clone command.
-    output = run('git clone %s %s' % (
+    output = run('git clone --depth=1 %s %s' % (
         ''.join(build_runner.build.project.repository.split('+')[1:]),
         build_runner.build_src))
 

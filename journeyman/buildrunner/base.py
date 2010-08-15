@@ -50,6 +50,7 @@ class BuildRunner(object):
     def run_build(self):
         # Maybe the last try failed, remove old results.
         self.build.buildstep_set.all().delete()
+        self.build.buildresult_set.all().delete()
 
         # Set a timestamp when starting a build an change the build state
         self.build.started = datetime.now()
@@ -142,6 +143,9 @@ class BuildRunner(object):
                 steps.append(('execute step %s (%s)' % (step, step_plugin),
                     registry.get_step(plugin or 'run_commands'), {
                     'lines':self.config[step_name]}))
+
+            steps.append(('tear down virtualenv',
+                registry.get_step('teardown_virtualenv')))
 
             # Execute the second round of steps.
             result = _execute_steps(steps)

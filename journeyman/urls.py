@@ -5,6 +5,8 @@ from django.views.generic.simple import redirect_to
 from django.contrib import admin
 admin.autodiscover()
 
+handler500 = 'journeyman.utils.views.server_error'
+
 urlpatterns = patterns('',
     (r'^$', redirect_to, {'url': '/projects/'}),
     (r'^admin/', include(admin.site.urls)),
