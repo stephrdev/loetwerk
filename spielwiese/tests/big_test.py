@@ -10,7 +10,7 @@ class LongTest(TestCase):
     def test_dawn(self):
         assert("something" != "something else", "Never!")
         
-    def test_failfailfail(self)
+    def test_failfailfail(self):
         op*op
         
     def test_dumn(self):
