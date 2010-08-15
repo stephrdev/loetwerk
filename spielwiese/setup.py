@@ -8,7 +8,7 @@ setup(name='calculon',
       author='Sebastian Hillig',
       author_email='sebastian.hillig@gmail.com',
       url='',
-      test_suite = "nose.collector",
+      test_suite = 'nose.collector',
       packages=find_packages('calculon')
      )
 

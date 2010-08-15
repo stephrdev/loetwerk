@@ -132,10 +132,10 @@ class BuildResult(models.Model):
                 tc.test += 1
                 # Append errors and messages.
                 for message in test.iterchildren():
-                    if message.tag == "error":
+                    if message.tag == 'error':
                         t.error = True
                         tc.error += 1
-                    elif message.tag == "failure":
+                    elif message.tag == 'failure':
                         t.failure = True
                         tc.failure += 1
                     m = Message(message.text, message.attrib)

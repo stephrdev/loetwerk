@@ -29,7 +29,7 @@ class JSONField(models.TextField):
 
 
     def db_type(self):
-        return "text"
+        return 'text'
 
     def contribute_to_class(self, cls, name):
         def get_json(model_instance):
@@ -40,8 +40,8 @@ class JSONField(models.TextField):
 
         super(JSONField, self).contribute_to_class(cls, name)
 
-        setattr(cls, "get_%s_json" % self.name, get_json)
-        setattr(cls, "set_%s_json" % self.name, set_json)
+        setattr(cls, 'get_%s_json' % self.name, get_json)
+        setattr(cls, 'set_%s_json' % self.name, set_json)
 
         models.signals.post_init.connect(self.post_init, sender=cls)
 
