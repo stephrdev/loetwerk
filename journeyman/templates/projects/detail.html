@@ -10,29 +10,31 @@
 {% endblock %}
 
 {% block content %}
-    <ul>
-        <li><em>Repository</em>: {{ object.repository }}</li>
-        <li><em>Last build</em>:
+<div class="span-24">
+    <div class="span-6">
+    <dl>
+        <dt>Repository</dt><dd> {{ object.repository }}</dd>
+        <dt>Last build</dt><dd>
             {% if object.last_build %}
             <a href="{% url builds_detail object.last_build.pk %}">
-                {{ object.last_build.started }}
+                {{ object.last_build.finished|timesince }} ago
             </a>
             {% else %}
                 no build available
             {% endif %}
-        </li>
-        <li><em>Last stable build</em>:
+        </dd>
+        <dt>Last stable build</dt><dd>
             {% if object.last_stable_build %}
             <a href="{% url builds_detail object.last_stable_build.pk %}">
-                {{ object.last_stable_build.started }}
+                {{ object.last_stable_build.finished|timesince }} ago
             </a>
             {% else %}
-                no build available
+                no stable build so far
             {% endif %}
-        </li>
+        </dd>
     </ul>
     <hr>
-    <h2>Outstanding builds</h2>
+    <h3>Queued builds</h3>
     <table>
         <thead>
             <th>Build</th>
@@ -44,9 +46,18 @@
                 Build {{ build.pk }}</a></td>
             <td>{{ build.node }}</td>
         </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2">
+                No builds queued at the moment.
+                <a class="button" href="{% url builds_create object.pk %}">Start new build</a>
+            </td>
+        </tr>
         {% endfor %}
     </table>
-    <hr />
+    </div>
+
+    <div class="span-18 last">
     <h2>Finished and running builds</h2>
     <table>
         <thead>
@@ -76,4 +87,7 @@
         {% endfor %}
     </table>
     {% paginate %}
+    </div>
+    
+
 {% endblock %}

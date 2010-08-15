@@ -48,6 +48,13 @@
                     {% endif %}
                 </td>
             </tr>
+            {% empty %}
+            <tr>
+                <td colspan=3>
+                    It seems like you have not created a project yet. How about adding a new project right now?<br>
+                    <a class="button" href="{% url workers_create %}">Add new worker</a>
+                </td>
+            </tr>
             {% endfor %}
         </table>
     </div>
@@ -62,6 +69,14 @@
                     <a href="{% url workers_detail object.pk %}">
                     {{ object.name }}
                     </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td>
+                    I am doomed without workers and won't be of much help. Why not add one so we can get this party started?<br>
+                    <a class="button" href="{% url workers_create %}">Add new worker</a>
+
                 </td>
             </tr>
             {% endfor %}
