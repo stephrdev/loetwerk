@@ -1,5 +1,11 @@
 {% extends "base.html" %}
 
+{% block extra_head %}
+{% if not object.finished %}
+<meta http-equiv="refresh" content="5" > 
+{% endif %}
+{% endblock %}
+
 {% block heading %}{{ object.project }}{% endblock %}
 
 {% block activities %}
@@ -10,9 +16,11 @@
 {% endblock %}
 
 {% block content %}
+    
     <h2 class="{{object.state_css_class}}">
         {{ object.short_revision }} on {{ object.node.name }} {{ object.state}}
     </h2>
+    <div class="span-4">
     <dl>
         <dt>Project</dt>
         <dd>
@@ -20,12 +28,14 @@
                 {{ object.project }}
             </a>
         </dd>
-        <dt>Revision</dt><dd>{{ object.revision }}</dd>
+        <dt>Revision</dt><dd>{{ object.short_revision }}</dd>
         <dt>Node</dt><dd>{{ object.node }}</dd>
         <dt>Started</dt><dd>{{ object.started }}</dd>
         <dt>Finished</dt><dd>{{ object.finished }}</dd>
     </dl>
     <hr>
+    </div>
+    <div class="span-20 last">
     <h2>Build log</h2>
     {% for step in object.build_steps %}
     <div>
@@ -34,12 +44,12 @@
                  id="build-step-{{step_id}}">
                  {% if step.successful %}success{% else %}fail{% endif %}
             </div>
-            <div class="span-22 last" id="build-step-{{step_id}}">
+            <div class="span-18 last" id="build-step-{{step_id}}">
                 <h3>{{ step.name }}</h3>
             </div>
         </div>
         <div class="toopen">
-            <div class="prepend-2 append-bottom span-22 toopen">
+            <div class="prepend-2 append-bottom span-18 toopen">
                 {% if step.exception_message %}
                     <h4>Exception</h4>
                     <pre>{{ step.exception_message }}</pre>
@@ -56,4 +66,5 @@
         </div>
     </div>
     {% endfor %}
+    </div>
 {% endblock %}

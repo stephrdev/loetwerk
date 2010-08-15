@@ -45,7 +45,8 @@ def detail_tests(request, build_id):
 
     # Return a template.
     return render_to_response('builds/detail_tests.html', {
-        'suites': suites
+        'suites': suites,
+        'object': build
     }, context_instance=RequestContext(request))
 
 def delete(request, build_id):

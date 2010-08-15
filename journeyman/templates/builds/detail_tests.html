@@ -2,6 +2,13 @@
 
 {% block heading %}unittest results{% endblock %}
 
+{% block activities %}
+    <a class="button" href="{% url builds_detail object.pk %}">
+        Back
+    </a>
+{% endblock %}
+
+
 {% block content %}
     <div class="span-24 last append-bottom">
         <div class="span-24 last">
