@@ -1,4 +1,5 @@
 from django.template import RequestContext
+from django.template.loader import render_to_string
 from django.shortcuts import render_to_response, get_object_or_404, redirect
 from django.http import HttpResponse
 from formwizard.forms import SessionFormWizard
@@ -9,25 +10,6 @@ from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
 
 from journeyman.workers.models import BuildNode
 from django.views.decorators.csrf import csrf_exempt
-
-template_config = """build:
-- dependencies[fetch_pip_dependencies]
-- install
-- test[run_tests]
-- testresults[fetch_xuint_results]
-
-dependencies[fetch_pip_dependencies]:
-%(dependencies)s
-
-install:
-%(install)s
-
-test[run_tests]:
-%(test)s
-
-testresults[fetch_xunit_results]:
-%(test_xmls)s
-"""
 
 def ymlize_list(text):
     if not text:
@@ -49,12 +31,12 @@ class CreateProjectWizard(SessionFormWizard):
             build_steps = ymlize_list(form.cleaned_data['build_steps'])
             test_steps = ymlize_list(form.cleaned_data['test_steps'])
 
-            conf = template_config % {
-                'install': ymlize_list(form.cleaned_data['build_steps']),
-                'test': ymlize_list(form.cleaned_data['test_steps']), 
-                'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
-                'dependencies': ymlize_list(form.cleaned_data['dependencies']),
-            }
+            conf = render_to_string("projects/config", {
+            'install': ymlize_list(form.cleaned_data['build_steps']),
+            'test': ymlize_list(form.cleaned_data['test_steps']), 
+            'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
+            'dependencies': ymlize_list(form.cleaned_data['dependencies']),
+            })
             self.update_extra_context({'config_file': conf})
 
         return self.get_form_step_data(form)
