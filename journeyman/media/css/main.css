@@ -24,6 +24,12 @@ input:not([type=checkbox]) {
     font-size: 1.5em !important;
 }
 
+thead th {
+    background-color:#000 !important;
+    color: #eee;
+    border: 1px solid #333;
+}
+
 textarea {
     margin-top: 0px !important;
     width: 100%;
