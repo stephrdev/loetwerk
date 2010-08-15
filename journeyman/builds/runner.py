@@ -46,7 +46,7 @@ class BuildRunner(object):
         sys.stderr = stderr
         try:
             output, return_code = task(*args, **kwargs)
-            result = (True, None)
+            result = (output, None)
         except (SystemExit, Exception), ex:
             output, return_code = '', 1
             result = (False, ('%s: %s' % (ex.__class__.__name__, ex.message)))
@@ -117,37 +117,43 @@ class BuildRunner(object):
         return output.return_code == 0, output.return_code
 
     def get_config(self):
-        with cd(self.build_src):
-            if not exists(self.build.project.config_file):
-                raise InvalidConfigDirectoryException(
-                    'Journey.conf not found: %s' % 
-                        self.build.project.config_file)
+        if self.build.project.config_file:
+            with cd(self.build_src):
+                if not exists(self.build.project.config_file):
+                    raise InvalidConfigDirectoryException(
+                        'Journey.conf not found: %s' % 
+                            self.build.project.config_file)
 
-            pwd = run('pwd')
-            config_file = tempfile.NamedTemporaryFile()
-            get('%s/%s' % (pwd, self.build.project.config_file),
-                config_file.name)
+                pwd = run('pwd')
+                config_file = tempfile.NamedTemporaryFile()
+                get('%s/%s' % (pwd, self.build.project.config_file),
+                    config_file.name)
 
+                try:
+                    self.config = yaml.load(config_file)
+                except Exception, ex:
+                    raise InvalidConfigException(ex.message)
+                finally:
+                    config_file.close()
+        else:
             try:
-                self.config = yaml.load(config_file)
+                self.config = yaml.load(self.build.project.config_data)
             except Exception, ex:
                 raise InvalidConfigException(ex.message)
-            finally:
-                config_file.close()
 
-            if 'options' not in self.config:
-                self.config['options'] = {}
-            if 'dependencies' in self.config:
-                raise InvalidConfigException(
-                    'build step dependencies is reserved')
+        if 'options' not in self.config:
+            self.config['options'] = {}
+        if 'dependencies' in self.config:
+            raise InvalidConfigException(
+                'build step dependencies is reserved')
 
-            if 'build' not in self.config:
-                self.config['build'] = ['dependencies', 'install', 'test',]
+        if 'build' not in self.config:
+            self.config['build'] = ['dependencies', 'install', 'test',]
 
-            if not set(self.config['build']).issubset(
-                set(self.config.keys() + ['dependencies',])):
-                raise InvalidConfigException(
-                    'some build steps are not configured')
+        if not set(self.config['build']).issubset(
+            set(self.config.keys() + ['dependencies',])):
+            raise InvalidConfigException(
+                'some build steps are not configured')
 
         return True, 0
 
