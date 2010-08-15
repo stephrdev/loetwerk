@@ -9,16 +9,19 @@
         <!--[if IE]>
         <link rel="stylesheet" href="{{MEDIA_URL}}blueprint/ie.css" type="text/css" />
         <![endif]-->
-        {% block extra_head %}
-        {% endblock %}
+
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="{{MEDIA_URL}}js/jquery.resize.js"></script>
-
+        {% block extra_head %}
+        {% endblock %}
         <script type="text/javascript">
             $(document).ready(function() {
                  $('textarea').autoResize({});
                  $(".opener").siblings('.toopen').hide();
-                 $(".opener").click(function() { $(this).siblings('.toopen').toggle() });
+                 $(".opener").click(function() {
+                     $("meta").remove();
+                     $(this).siblings('.toopen').toggle();
+                 });
                  $([1,2,]).each(function() {
                      $(".opener").animate({
                          opacity: 0.5,

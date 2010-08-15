@@ -2,7 +2,17 @@
 
 {% block extra_head %}
 {% if not object.finished %}
-<meta http-equiv="refresh" content="5" > 
+<script type="text/javascript">
+$(document).ready(function() {
+    var refreshId = setInterval(function() {
+        window.location.reload()
+    }, 1000);
+
+    $(".opener").click(function() {
+        clearInterval(refreshId);
+    })
+});
+</script>
 {% endif %}
 {% endblock %}
 
