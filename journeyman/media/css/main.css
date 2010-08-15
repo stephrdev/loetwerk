@@ -6,9 +6,12 @@ p, ul {
     font-size: 150% !important;
 }
 
+h1 {
+    text-shadow: 0px 1px 0px #fff, 0px 2px 5px #999; 
+}
+
 h1, h2, h3, h4, h5 {
     font-family: "Century Gothic", "Apple Gothic", sans-serif !important; 
-    text-shadow: 0px 1px 0px #fff, 0px 2px 5px #999; 
 }
 
 input:not([type=checkbox]) {
@@ -36,6 +39,14 @@ textarea {
 .unknown    { padding: .8em; margin-bottom: 1em; border: 2px solid #ddd; }
 .unknown-box, .unknown    { background: #ddd; color: #333; border-color: #999; }
 .unknown-box a, .unknown a  { color: #000; }
+
+.error-box      { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
+.notice-box     { background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.success-box    { background: #E6EFC2; color: #264409; border-color: #C6D880; }
+.error-box a    { color: #8a1f11; }
+.notice-box a   { color: #514721; }
+.success-box a  { color: #264409; }
+
 
 form p {
     margin-bottom: 10px;
