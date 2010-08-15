@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.shortcuts import render_to_response, get_object_or_404, redirect
@@ -75,6 +76,7 @@ def list(request):
     return render_to_response('projects/list.html', {
         'object_list': Project.objects.filter(active=True),
         'worker_object_list': BuildNode.objects.filter(active=True),
+        'readme': settings.README_HTML,
     }, context_instance=RequestContext(request))
 
 def detail(request, project_id):

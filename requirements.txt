@@ -5,6 +5,7 @@ ghettoq==0.4.1
 django-celery==2.0.2
 django-pagination==1.0.7
 lxml
+markdown
 -e git+http://github.com/stephrdev/django-formwizard.git#egg=django-formwizard
 -e git://github.com/bastih/pony_barn.git#egg=pony_barn
 -e git+git://github.com/bitprophet/fabric.git#egg=Fabric
