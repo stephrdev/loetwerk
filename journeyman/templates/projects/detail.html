@@ -6,7 +6,7 @@
 {% block activities %}
     <a class="button" href="{% url builds_create object.pk %}">Start new build</a>
     <a class="button" href="{% url projects_edit object.pk %}">Configure</a>
-    <a class="button" href="{% url projects_delete object.pk %}">Delete</a>
+    <a class="button" href="{% url projects_delete object.pk %}" onclick="if(!confirm('Are you sure?')){return false;}">Delete</a>
 {% endblock %}
 
 {% block content %}

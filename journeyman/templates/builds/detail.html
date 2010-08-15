@@ -6,7 +6,7 @@
     <a class="button" href="{% url builds_detail_tests object.pk %}">
         Test results
     </a>
-    <a class="button" href="{% url builds_delete object.pk %}">Delete</a>
+    <a class="button" href="{% url builds_delete object.pk %}" onclick="if(!confirm('Are you sure?')){return false;}">Delete</a>
 {% endblock %}
 
 {% block content %}
