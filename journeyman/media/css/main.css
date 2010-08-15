@@ -25,9 +25,9 @@ input:not([type=checkbox]) {
 }
 
 thead th {
-    background-color:#000 !important;
+    background-color:#333 !important;
     color: #eee;
-    border: 1px solid #333;
+    border: 1px solid #666;
 }
 
 textarea {
