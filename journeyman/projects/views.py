@@ -11,14 +11,14 @@ from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
 
 from journeyman.workers.models import BuildNode
 from django.views.decorators.csrf import csrf_exempt
-
+from django.utils.safestring import mark_safe
 def ymlize_list(text):
     if not text:
-        return ''
+        return u''
     yml_steps = []
     for line in text.split('\r\n'):
         yml_steps.append('- ' + line)
-    return '\n'.join(yml_steps)
+    return mark_safe(u'\n'.join(yml_steps))
 
 ugly_global = None
 
@@ -52,7 +52,6 @@ class CreateProjectWizard(SessionFormWizard):
         if isinstance(form, BuildProcessForm):
             build_steps = ymlize_list(form.cleaned_data['build_steps'])
             test_steps = ymlize_list(form.cleaned_data['test_steps'])
-
             # Render a config.
             conf = render_to_string('projects/config', {
                 'install': ymlize_list(form.cleaned_data['build_steps']),
@@ -60,7 +59,7 @@ class CreateProjectWizard(SessionFormWizard):
                 'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
                 'dependencies': ymlize_list(form.cleaned_data['dependencies']),
             })
-
+            print conf
             # Write the config to extra context.
             self.update_extra_context({'config_file': conf})
 
@@ -77,6 +76,7 @@ class CreateProjectWizard(SessionFormWizard):
 
         # And add the config data + save.
         project.config_data = self.get_extra_context().get('config_file', '')
+        print project.config_data
         project.save()
 
         # Return a nice info page.

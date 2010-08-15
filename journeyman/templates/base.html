@@ -34,11 +34,20 @@
     <body id="index" class="home">
         <div class="container">    
             <div id="header" class="span-24">
-                <h6><a href="{% url projects_list %}">Journeyman</a> ></h6>
+                <h6><a href="{% url projects_list %}">Journeyman</a></h6>
             </div>
             <hr/>
             <div class="span-8"><h1>{% block heading %}{% endblock %}</h1></div>
             <div class="span-16 last activities">{% block activities %}{% endblock %}</div>
+            <hr/>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                {% endfor %}
+            </ul>
+            <hr/>
+            {% endif %}
             <div id="content" class="span-24 last">
                 {% block content %}{% endblock %}
             </div>

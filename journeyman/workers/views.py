@@ -39,7 +39,7 @@ def detail(request, worker_id=None):
 
 def delete(request, worker_id):
     # Load the node and remove.
-    node = get_object_or_404(Project, pk=worker_id)
+    node = get_object_or_404(BuildNode, pk=worker_id)
     node.delete()
     return redirect('workers_list')
 
