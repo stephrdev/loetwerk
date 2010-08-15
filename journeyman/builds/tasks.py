@@ -3,7 +3,7 @@ from celery.registry import tasks
 
 class BuildTask(Task):
     default_retry_delay = 10
-    max_retries = 5
+    max_retries = 2
 
     def run(self, build_id, **kwargs):
         # Get a logger.
@@ -12,7 +12,7 @@ class BuildTask(Task):
         try:
             # Load needed modules.
             from journeyman.buildrunner import BuildRunner
-            from journeyman.builds.models import Build
+            from journeyman.builds.models import Build, BuildState
 
             # Try to get the build.
             build = Build.objects.get(pk=build_id)
@@ -22,6 +22,9 @@ class BuildTask(Task):
             build_runner.run_build()
 
             return True
+        except MaxRetriesExceededError, exc:
+            build = Build.objects.get(pk=build_id)
+            build.state = BuildState.FAILED
         except Exception, exc:
             # Something went wrong. Retry.
             self.retry([build_id,], kwargs, exc=exc)
