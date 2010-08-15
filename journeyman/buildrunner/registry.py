@@ -13,7 +13,8 @@ class Registry(object):
     def add_step(self, name, func):
         # Check if the plugin is already registered.
         if func.__name__ in self._registry:
-            raise StepAlreadyRegistered('The step %s has already been registered.' % func.__name__)
+            raise StepAlreadyRegistered('The step %s has already \
+                been registered.' % func.__name__)
         self._registry[func.__name__] = {'name': name, 'func': func}
 
     def list_steps(self):
