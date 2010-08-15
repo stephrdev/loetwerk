@@ -8,22 +8,27 @@ from journeyman.projects.forms import RepositoryForm, BuildProcessForm, \
     JourneyConfigOutputForm, JourneyConfigFileForm, ProjectForm
 
 template_config = """build:
-- dependencies
+- dependencies[fetch_pip_dependencies]
 - install
-- test
+- test[run_tests]
+- testresults[fetch_xuint_results]
+
+dependencies[fetch_pip_dependencies]:
+%(dependencies)s
 
 install:
 %(install)s
 
-test:
+test[run_tests]:
 %(test)s
 
-options:
-    unittest-xml-results: %(test_xmls)s
-    pip-dependencies: %(dependencies)s
+testresults[fetch_xunit_results]:
+%(test_xmls)s
 """
 
 def ymlize_list(text):
+    if not text:
+        return ""
     yml_steps = []
     for line in text.split('\r\n'):
         yml_steps.append("- " + line)
@@ -42,10 +47,10 @@ class CreateProjectWizard(SessionFormWizard):
             test_steps = ymlize_list(form.cleaned_data['test_steps'])
 
             conf = template_config % {
-                'install': build_steps, 
-                'test': test_steps, 
-                'test_xmls': form.cleaned_data['test_xmls'],
-                'dependencies': form.cleaned_data['dependencies']
+                'install': ymlize_list(form.cleaned_data['build_steps']),
+                'test': ymlize_list(form.cleaned_data['test_steps']), 
+                'test_xmls': ymlize_list(form.cleaned_data['test_xmls']),
+                'dependencies': ymlize_list(form.cleaned_data['dependencies']),
             }
             self.update_extra_context({'config_file': conf})
 
