@@ -117,7 +117,7 @@ class BuildResult(models.Model):
         # Create a stream of xml data.
         s = StringIO(str(self.body))
         # Parse the xml stream.
-        parser = etree.XMLParser(recover=True, huge_tree=True, strip_cdata=False)
+        parser = etree.XMLParser(recover=True, strip_cdata=False)
         root = etree.parse(s, parser)
         # Walk through the xml tree
         for item in root.findall('.'):
