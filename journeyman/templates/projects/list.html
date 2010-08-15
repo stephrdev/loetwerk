@@ -15,6 +15,7 @@ Projects
             <th>Project</th>
             <th>Last build</th>
             <th>Last stable build</th>
+            <th>Current state</th>
         </thead>
         {% for object in object_list %}
         <tr>
@@ -29,15 +30,23 @@ Projects
                     no build available
                 {% endif %}
             </td>
-            <td>
-                {% if object.last_stable_build %}
-                <a href="{% url builds_detail object.last_stable_build.pk %}">
-                    {{ object.last_stable_build.started }}
-                </a>
-                {% else %}
+            {% if object.last_stable_build %}
+                <td>
+                    <a href="{% url builds_detail object.last_stable_build.pk %}">
+                        {{ object.last_stable_build.started }}
+                    </a>
+                </td>
+                <td>
+                    {{ object.last_stable_build.state }}
+                </td>
+            {% else %}
+                <td>
                     no build available
-                {% endif %}
-            </td>
+                </td>
+                <td>
+                    unknown
+                </td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

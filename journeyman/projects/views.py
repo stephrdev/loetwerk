@@ -56,9 +56,11 @@ class CreateProjectWizard(SessionFormWizard):
             (k,v) for k,v in self.get_all_cleaned_data().items() 
             if k in Project._meta.get_all_field_names()
         ))
+        project.config_data = self.get_extra_context().get('config_file', '')
+        project.save()
 
         return render_to_response('projects/create_done.html', {
-            'object': project
+            'project': project
         }, context_instance=RequestContext(request))
 
 create = CreateProjectWizard([RepositoryForm, BuildProcessForm, \

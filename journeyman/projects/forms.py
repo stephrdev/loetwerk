@@ -30,7 +30,9 @@ class JourneyConfigOutputForm(forms.Form):
     pass
 
 class JourneyConfigFileForm(forms.Form):
-    config_file = forms.CharField(initial="journey.conf/config")
+    config_file = forms.CharField(initial="journey.conf/config",
+        help_text="If you leave this field blank, we will store the config \
+        locally.", required=False)
 
 class ProjectForm(forms.ModelForm):
     class Meta:

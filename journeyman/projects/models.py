@@ -9,8 +9,9 @@ class Project(models.Model):
     ssh_key = models.TextField(blank=True)
 
     config_file = models.CharField(max_length=255,
-        default="journey.conf/config")
-    
+        default="journey.conf/config", blank=True)
+    config_data = models.TextField(blank=True)
+
     def get_state(self):
         try:
             return self.build_set.all().order_by('-pk')[0].state
