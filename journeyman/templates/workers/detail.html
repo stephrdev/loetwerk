@@ -6,7 +6,7 @@
 <a class="button" href="{% url workers_edit object.pk %}">
   Configure
 </a>
-<a class="button" href="{% url workers_delete object.pk %}">
+<a class="button" href="{% url workers_delete object.pk %}" onclick="if(!confirm('Are you sure?')){return false;}">
   Delete
 </a>
 {% endblock %}
