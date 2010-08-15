@@ -3,7 +3,7 @@ body {
 }
 
 p, ul {
-    font-size: 150% !important;
+    font-size: 1.5em !important;
 }
 
 ul ul {
@@ -21,7 +21,7 @@ h1, h2, h3, h4, h5 {
 input:not([type=checkbox]) {
     margin-top: 0px !important;
     width: 100% !important;
-    font-size: 150% !important;
+    font-size: 1.5em !important;
 }
 
 textarea {
