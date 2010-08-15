@@ -1,13 +1,14 @@
 {% extends "base.html" %}
+{% load pagination_tags %}
 
 {% block heading %}{{ object.name }}{% endblock %}
+
 {% block activities %}
-<a class="button" href="{% url builds_create object.pk %}">Start new build</a>
-<a class="button" href="{% url projects_edit object.pk %}">Configure</a>
-<a class="button" href="{% url projects_delete object.pk %}">Delete</a>
+    <a class="button" href="{% url builds_create object.pk %}">Start new build</a>
+    <a class="button" href="{% url projects_edit object.pk %}">Configure</a>
+    <a class="button" href="{% url projects_delete object.pk %}" onclick="if(!confirm('Are you sure?')){return false;}">Delete</a>
 {% endblock %}
 
-{% load pagination_tags %}
 {% block content %}
     <ul>
         <li><em>Repository</em>: {{ object.repository }}</li>
@@ -58,10 +59,17 @@
         {% autopaginate build_list %}
         {% for build in build_list %}
         <tr>
-            <td><a href="{% url builds_detail build.pk %}">
-                {{ build.node.name }}/{{ build.started }}/{{ build.state }}</a></td>
+            <td>
+                <a href="{% url builds_detail build.pk %}">
+                {{ build.node.name }}/{{ build.started }}/{{ build.state }}
+                </a>
+            </td>
             <!--><td>{{ build.started }}</td>-->
-            <td>{%if build.finished %}{{ build.finished|timesince }} ago{% endif %}</td>
+            <td>
+                {%if build.finished %}
+                    {{ build.finished|timesince }} ago
+                {% endif %}
+            </td>
             <td>{{ build.node }}</td>
             <td class="{{ build.state_css_class }}-box">{{ build.state }}</td>
         </tr>

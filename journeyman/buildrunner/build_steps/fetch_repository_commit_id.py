@@ -16,6 +16,8 @@ def fetch_repository_commit_id(build_runner, **kwargs):
         # get the revision id and store in build runner instance
         output = run('git log --pretty="format:%H" -n 1')
         build_runner.repo_head_id = output
+        output = run('git log --pretty="format:%h" -n 1')
+        build_runner.repo_head_short_id = output
 
     # Pass the exit code of vcs.
     return output.return_code == 0, output.return_code

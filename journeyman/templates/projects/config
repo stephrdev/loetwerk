@@ -1,8 +1,8 @@
 build:
-{% if dependencies %}- dependencies[fetch_pip_dependencies]{% endif %}
+{% if dependencies %}- dependencies{% endif %}
 - install
-- test[run_tests]
-{% if test_xmls %}- testresults[fetch_xunit_results]{% endif %}
+- test
+{% if test_xmls %}- testresults{% endif %}
 {% if dependencies %}
 dependencies[fetch_pip_dependencies]:
 {{dependencies}}

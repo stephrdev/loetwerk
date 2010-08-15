@@ -23,6 +23,7 @@ class BuildRunner(object):
     build_src = None
 
     repo_head_id = None
+    repo_head_short_id = None
 
     def __init__(self, build):
         # We accept Build objects and Build ids
@@ -70,6 +71,7 @@ class BuildRunner(object):
 
         # Save the revision, we tested against and the finished timestamp.
         self.build.revision = self.repo_head_id
+        self.build.short_revision = self.repo_head_short_id
         self.build.finished = datetime.now()
         self.build.save()
 
