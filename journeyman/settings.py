@@ -106,6 +106,8 @@ CELERY_QUEUES = {
     'tasks': {'exchange': 'tasks'},
 }
 
+LOGIN_URL = '/admin/'
+
 try:
     from local_settings import *
 except ImportError:
