@@ -20,7 +20,6 @@ def fetch_xunit_results(build_runner, **kwargs):
                     body=''.join(local_test_file.readlines())
                 )
                 local_test_file.close()
-
     return True, 0
 
 registry.add_step('fetch_xunit_results', fetch_xunit_results)

@@ -92,6 +92,14 @@ class BuildResult(models.Model):
     def __unicode__(self):
         return '%s - %s' % (self.build, self.name)
 
+    @property
+    def buildstate(self):
+        if int(self.get_testsuites()[0].failures) > 0 \
+            or int(self.get_testsuites()[0].failures) > 0:
+            return BuildState.FAILED
+        else:
+            return BuildState.STABLE
+
     def get_testsuites(self):
         suites = []
         s = StringIO(str(self.body))
