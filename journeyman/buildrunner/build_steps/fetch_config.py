@@ -56,19 +56,28 @@ def fetch_config(build_runner, **kwargs):
     # Check if build steps are configured, if not.. set a default list.
     if 'build' not in build_runner.config:
         build_runner.config['build'] = [
-            'dependencies[fetch_pip_dependencies]',
+            'dependencies',
             'install',
-            'test[run_tests]',
-            'testresults[fetch_xunit_results]'
+            'test',
+            'testresults'
         ]
+        build_runner.config['build_plugins'] = {
+            'test': 'run_tests',
+            'dependencies': 'fetch_pip_dependencies'
+        }
+    else:
+        # Store plugins
+        build_runner.config['build_plugins'] = dict(
+            [(k.split('[')[0], k.split('[')[1][:-1]) \
+            for k in build_runner.config.keys() if len(k.split('[')) == 2])
 
     # Maybe we need cleaned step names. Remove the plugin names.
     build_runner.config['build_names'] = [k.split('[')[0]
-        for k in build_runner.config['build']]
+        for k in build_runner.config.keys()]
 
     # Check if we have commands/input for every step.
     if not set(build_runner.config['build']).issubset(
-        set(build_runner.config.keys())):
+        set(build_runner.config['build_names'])):
         raise InvalidConfigException(
             'some build steps are not configured')
 
