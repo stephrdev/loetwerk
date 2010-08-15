@@ -17,13 +17,13 @@ class BuildProcessForm(forms.Form):
         widget=forms.Textarea(attrs={'rows':3, 'cols':40}),
         help_text="Now tell us how to run your tests. If you should have \
         many different test suites, just add another line.")
-    dependencies = forms.CharField(initial="dependencies.txt",
+    dependencies = forms.CharField(required=False, initial="dependencies.txt",
         widget=forms.Textarea(attrs={'rows':3, 'cols':40}),
         help_text="Please enter a list of pip requirement files that you \
         have used to specify your dependencies")
     test_xmls = forms.CharField(required=False,
         widget=forms.Textarea(attrs={'rows':3, 'cols':40}),
-        help_text="Please enter a whitespace separated list of paths of \
+        help_text="Please enter a newline separated list of paths of \
         unit test result xmls.")
 
 class JourneyConfigOutputForm(forms.Form):

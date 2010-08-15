@@ -5,7 +5,7 @@
 {% block content %}
 <form method="post" action=".">
   {% csrf_token %}
-  {{ form }}
+  {% include 'form.html' %}
   <button type="submit">Create new node</button>
 </form>
 {% endblock %}

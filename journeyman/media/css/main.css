@@ -57,19 +57,28 @@ textarea {
 }
 
 .success-box    {background: #E6EFC2; color: #264409; border-color: #C6D880; }
-.notice-box, .failure-box    {background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.notice-box, .failure-box {background: #FFF6BF; color: #514721; border-color: #FFD324; }
 .error-box      {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
 
 .error-box a    { color: #8a1f11; }
 .notice-box a   { color: #514721; }
 .success-box a  { color: #264409; }
 
-.suite { 
-    font-size: 2em;
+.suite, td.title { 
+    font-size: 1.5em;
 }
     
 .suite .title {
     text-decoration:underline;
+}
+
+.activities {
+    text-align:right;
+}
+
+.activities a.button {
+    display:inline;
+    float:none;
 }
 
 form p {
