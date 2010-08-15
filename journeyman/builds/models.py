@@ -4,6 +4,9 @@ from journeyman.projects.models import Project
 from journeyman.utils import JSONField, Options
 from journeyman.builds.tasks import BuildTask
 
+from lxml import etree
+from StringIO import StringIO
+
 class BuildState(Options):
     QUEUED = 'queued'
     RUNNING = 'running'
@@ -87,3 +90,46 @@ class BuildResult(models.Model):
 
     def __unicode__(self):
         return '%s - %s' % (self.build, self.name)
+
+    def get_testsuites(self):
+        suites = []
+        s = StringIO(str(self.body))
+        root = etree.parse(s)
+        for item in root.findall('.'):
+            ts = TestSuite(item.attrib)
+            suites.append(ts)
+            for test in item.iterchildren():
+                t = Test(test.attrib)
+                ts.testcases.append(t)
+                for message in test.iterchildren():
+                    if message.tag == "error":
+                        t.error = True
+                    elif message.tag == "failure":
+                        t.failure = True
+                    m = Message(message.text, message.attrib)
+                    t.messages.append(m)
+        return suites
+
+class TestSuite(object):
+    def __init__(self, attrs):
+        self.testcases = []
+        self.__dict__.update(**attrs)
+
+    def __unicode__(self):
+        return str(self.__dict__)
+
+class Test(object):
+    def __init__(self, attrs):
+        self.messages = []
+        self.error = False
+        self.failure = False
+        self.__dict__.update(**attrs)
+
+class Message(object):
+    def __init__(self, content, attrs):
+        self.content = content
+        self.__dict__.update(**attrs)
+
+    def __unicode__(self):
+        return str(self.__dict__)
+
