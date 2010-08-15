@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 
-{% block heading %}Node {{object.name}}{% endblock %}
+{% block heading %}{{object.name}}{% endblock %}
 
 {% block activities %}
 <a class="button" href="{% url workers_edit object.pk %}">
-  Edit
+  Configure
 </a>
 <a class="button" href="{% url workers_delete object.pk %}">
   Delete

@@ -6,14 +6,22 @@ p, ul {
     font-size: 150% !important;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
     font-family: "Century Gothic", "Apple Gothic", sans-serif !important; 
+    text-shadow: 0px 1px 0px #fff, 0px 2px 5px #999; 
 }
 
-textarea, input:not([type=checkbox]) {
+input:not([type=checkbox]) {
     margin-top: 0px !important;
     width: 100% !important;
     font-size: 150% !important;
+}
+
+textarea {
+    margin-top: 0px !important;
+    width: 100%;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 input[type=checkbox] {
