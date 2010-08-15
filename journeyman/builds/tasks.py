@@ -1,6 +1,8 @@
 from celery.task import Task
 from celery.registry import tasks
 
+from datetime import datetime
+
 class BuildTask(Task):
     default_retry_delay = 10
     max_retries = 2
@@ -25,10 +27,11 @@ class BuildTask(Task):
         except Exception, exc:
             # Something went wrong. Retry.
             try:
-                self.retry([build_id,], kwargs, exc=exc)
+                self.retry([build_id,], kwargs)
             except Task.MaxRetriesExceededError, exc:
                 build = Build.objects.get(pk=build_id)
                 build.state = BuildState.FAILED
+                build.finished = datetime.now()
                 build.save()
 
 # Register with celery.
