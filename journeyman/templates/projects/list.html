@@ -7,8 +7,7 @@ Projects
 
 {% block activities %}
 <a class="button" href="{% url projects_create %}">Add new project</a>
-<a class="button" href="{% url workers_list %}">Add new worker</a>
-
+<a class="button" href="{% url workers_create %}">Add new worker</a>
 {% endblock %}
 
 {% block content %}
@@ -27,19 +26,19 @@ Projects
             <td>
                 {% if object.last_build %}
                 <a href="{% url builds_detail object.last_build.pk %}">
-                    {{ object.last_build.started }}
+                    {{ object.last_build.started|timesince }} ago
                 </a>
                 {% else %}
-                    no build available
+                    -
                 {% endif %}
             </td>
             <td>
                 {% if object.last_stable_build %}
                 <a href="{% url builds_detail object.last_stable_build.pk %}">
-                    {{ object.last_stable_build.started }}
+                    {{ object.last_stable_build.started|timesince }} ago
                 </a>
                 {% else %}
-                    no build available
+                    -
                 {% endif %}
             </td>
             <td class="unknown-box {{object.last_build.state_css_class}}-box">

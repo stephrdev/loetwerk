@@ -17,9 +17,7 @@ def create(request):
     }, context_instance=RequestContext(request))
             
 def list(request):
-    return render_to_response('workers/list.html', {
-        'object_list': BuildNode.objects.filter(active=True)
-    }, context_instance=RequestContext(request))
+    return redirect('projects_list')
 
 @login_required
 def detail(request, worker_id=None):
