@@ -115,7 +115,7 @@ class BuildResult(models.Model):
         # Create a stream of xml data.
         s = StringIO(str(self.body))
         # Parse the xml stream.
-        parser = etree.XMLParser(recover=True)
+        parser = etree.XMLParser(recover=True, huge_tree=True, strip_cdata=False)
         root = etree.parse(s, parser)
         # Walk through the xml tree
         for item in root.findall('.'):
@@ -125,8 +125,6 @@ class BuildResult(models.Model):
             suites.append(ts)
             # Walk through tests
             for test in item.iterchildren():
-                if len(test.attrib) < 1:
-                    continue
                 t = Test(test.attrib)
                 ts.testclasses.setdefault(
                     test.attrib['classname'],   
