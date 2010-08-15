@@ -51,7 +51,7 @@ def fetch_config(build_runner, **kwargs):
                 build_runner.build.project.config_data)
         except Exception, ex:
             # The stored config is broken.
-            raise InvalidConfigException(ex.message)}
+            raise InvalidConfigException(ex.message)
 
     # Check if build steps are configured, if not.. set a default list.
     if 'build' not in build_runner.config:
