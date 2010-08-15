@@ -81,6 +81,10 @@ textarea {
     float:none;
 }
 
+.opener {
+    cursor: pointer;
+}
+
 form p {
     margin-bottom: 10px;
 }
@@ -91,4 +95,6 @@ form ul {
 
 body pre {
     font:1em 'andale mono','lucida console',monospace;
+    white-space: pre-wrap;
+    width: 120ex;
 }

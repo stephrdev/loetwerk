@@ -20,17 +20,34 @@ def ymlize_list(text):
         yml_steps.append('- ' + line)
     return '\n'.join(yml_steps)
 
+ugly_global = None
+
 class CreateProjectWizard(SessionFormWizard):
     def get_template(self):
         # Return template name based on wizard step
         return ['projects/create_wizard_%s.html' % self.determine_step(),]
+        
+    def __call__(self, request, *args, **kwargs):
+        result = super(CreateProjectWizard, self).__call__(request, *args, **kwargs)
+        global ugly_global
+        if ugly_global:
+            r, ugly_global = ugly_global, None
+            return redirect('projects_edit', r)
+            
+        return result
 
     def process_step(self, form):
         # If repository form, add the name to extra_context (for use in
         # template.
         if isinstance(form, RepositoryForm):
-            self.update_extra_context({'name': form.cleaned_data['name']})
-
+            if "config" in self.request.POST:
+                project = Project.objects.create(**dict(
+                    (k,v) for k,v in form.cleaned_data.items()
+                ))
+                project.save()
+                global ugly_global
+                ugly_global = project.id
+                                
         # If BuildProcess form, we need to generate a config.
         if isinstance(form, BuildProcessForm):
             build_steps = ymlize_list(form.cleaned_data['build_steps'])
