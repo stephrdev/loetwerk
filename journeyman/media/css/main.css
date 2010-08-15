@@ -40,13 +40,25 @@ textarea {
 .unknown-box, .unknown    { background: #ddd; color: #333; border-color: #999; }
 .unknown-box a, .unknown a  { color: #000; }
 
-.error-box      { background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
-.notice-box     { background: #FFF6BF; color: #514721; border-color: #FFD324; }
-.success-box    { background: #E6EFC2; color: #264409; border-color: #C6D880; }
+
+.error-box,
+.notice-box,
+.success-box   { 
+    font-family: "Century Gothic", "Apple Gothic", sans-serif !important;  
+    -moz-box-shadow: inset 0 0 1px rgba(0,0,0, 0.3);
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0, 0.3);
+    text-indent: 4px;
+    font-variant: small-caps;
+    letter-spacing: 1px;
+    text-transform: lowercase;
+}
+
+.error-box      {background: #FBE3E4; color: #8a1f11; border-color: #FBC2C4; }
+.notice-box     {background: #FFF6BF; color: #514721; border-color: #FFD324; }
+.success-box    {background: #E6EFC2; color: #264409; border-color: #C6D880; }
 .error-box a    { color: #8a1f11; }
 .notice-box a   { color: #514721; }
 .success-box a  { color: #264409; }
-
 
 form p {
     margin-bottom: 10px;

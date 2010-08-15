@@ -12,24 +12,24 @@
         {{ object.short_revision }} on {{ object.node.name }} {{ object.state}}
     </h2>
     <dl>
-        <df>Project</df>
+        <dt>Project</dt>
         <dd>
             <a href="{% url projects_detail object.project.pk %}">
                 {{ object.project }}
             </a>
         </dd>
-        <df>Revision</df><dd>{{ object.revision }}</dd>
-        <df>Node</df><dd>{{ object.node }}</dd>
-        <df>Started</df><dd>{{ object.started }}</dd>
-        <df>Finished</df><dd>{{ object.finished }}</dd>
+        <dt>Revision</dt><dd>{{ object.revision }}</dd>
+        <dt>Node</dt><dd>{{ object.node }}</dd>
+        <dt>Started</dt><dd>{{ object.started }}</dd>
+        <dt>Finished</dt><dd>{{ object.finished }}</dd>
     </dl>
     <hr>
-    <h2>Steps</h2>
+    <h2>Build log</h2>
     {% for step in object.build_steps %}
-        <div class="span-2 {{ step.state_css_class }}-box">
+        <div class="span-2 {{ step.state_css_class }}-box" id="build-step-{{step_id}}">
              {% if step.successful %}success{% else %}fail{% endif %}
         </div>
-        <div class="span-22 last">
+        <div class="span-22 last" id="build-step-{{step_id}}">
         <h3>{{ step.name }}</h3>
         </div>         
         <div class="prepend-2 append-bottom span-22">
@@ -44,7 +44,7 @@
         {% if step.stderr %}
         <h4>stderr</h4>
         <pre>{{ step.stderr }}</pre>
-        {% endif %}
+        {% endif %}        
         </div>
     {% endfor %}
 {% endblock %}
