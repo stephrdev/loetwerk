@@ -1,7 +1,7 @@
 from celery.task import Task
 from celery.registry import tasks
 from journeyman.builds.models import Build
-from journeyman.builds.runner import BuildRunner
+from journeyman.buildrunner import BuildRunner
 
 class BuildTask(Task):
     default_retry_delay = 10

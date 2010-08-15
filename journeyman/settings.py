@@ -92,6 +92,7 @@ INSTALLED_APPS = (
     'journeyman.projects',
     'journeyman.workers',
     'journeyman.builds',
+    'journeyman.buildrunner',
 )
 
 import djcelery
