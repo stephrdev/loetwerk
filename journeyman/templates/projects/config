@@ -1,0 +1,20 @@
+build:
+{% if dependencies %}- dependencies[fetch_pip_dependencies]{% endif %}
+- install
+- test[run_tests]
+{% if test_xmls %}- testresults[fetch_xunit_results]{% endif %}
+{% if dependencies %}
+dependencies[fetch_pip_dependencies]:
+{{dependencies}}
+{% endif %}
+
+install:
+{{install}}
+
+test[run_tests]:
+{{test}}
+
+{% if test_xmls %}
+testresults[fetch_xunit_results]:
+{{test_xmls}}
+{% endif %}

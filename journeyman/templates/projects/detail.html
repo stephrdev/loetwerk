@@ -61,7 +61,7 @@
             <td><a href="{% url builds_detail build.pk %}">
                 {{ build.node.name }}/{{ build.started }}/{{ build.state }}</a></td>
             <!--><td>{{ build.started }}</td>-->
-            <td>{{ build.finished|timesince }}</td>
+            <td>{%if build.finished %}{{ build.finished|timesince }} ago{% endif %}</td>
             <td>{{ build.node }}</td>
             <td class="{{ build.state_css_class }}-box">{{ build.state }}</td>
         </tr>
