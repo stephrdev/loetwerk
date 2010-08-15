@@ -148,7 +148,7 @@ class BuildResult(models.Model):
 class TestSuite(object):
     def __init__(self, attrs):
         self.testclasses = {}
-        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()])
+        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()]))
 
     def __unicode__(self):
         return str(self.__dict__)
@@ -166,12 +166,12 @@ class Test(object):
         self.messages = []
         self.error = False
         self.failure = False
-        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()])
+        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()]))
 
 class Message(object):
     def __init__(self, content, attrs):
         self.content = content
-        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()])
+        self.__dict__.update(**dict([(str(k), v) for k,v in attrs.items()]))
 
     def __unicode__(self):
         return str(self.__dict__)
