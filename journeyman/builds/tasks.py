@@ -22,7 +22,7 @@ class BuildTask(Task):
             build_runner.run_build()
 
             return True
-        except MaxRetriesExceededError, exc:
+        except Task.MaxRetriesExceededError, exc:
             build = Build.objects.get(pk=build_id)
             build.state = BuildState.FAILED
         except Exception, exc:
