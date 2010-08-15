@@ -10,9 +10,15 @@ h1, h2, h3 {
     font-family: "Century Gothic", "Apple Gothic", sans-serif !important; 
 }
 
-textarea, input {
+textarea, input:not([type=checkbox]) {
+    margin-top: 0px !important;
     width: 100% !important;
     font-size: 150% !important;
+}
+
+input[type=checkbox] {
+    width: 20px;
+    height: 20px;
 }
 
 textarea {
@@ -23,3 +29,10 @@ textarea {
 .unknown-box, .unknown    { background: #ddd; color: #333; border-color: #999; }
 .unknown-box a, .unknown a  { color: #000; }
 
+form p {
+    margin-bottom: 10px;
+}
+
+form ul {
+    margin-bottom: 0px;
+}

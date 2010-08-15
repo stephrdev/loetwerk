@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block heading %}{{object.name}}{% endblock %}
+
+{% block content %}
+<form method="post" action=".">
+  {% csrf_token %}
+  {% include 'form.html' %}
+  <button type="submit">Update configuration</button>
+</form>
+{% endblock %}
