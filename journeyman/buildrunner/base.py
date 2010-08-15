@@ -50,6 +50,7 @@ class BuildRunner(object):
     def run_build(self):
         # Maybe the last try failed, remove old results.
         self.build.buildstep_set.all().delete()
+        self.build.buildresult_set.all().delete()
 
         # Set a timestamp when starting a build an change the build state
         self.build.started = datetime.now()
