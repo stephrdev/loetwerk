@@ -3,7 +3,7 @@
 {% block heading %}unittest results{% endblock %}
 
 {% block content %}
-    <div class="span-24 last">
+    <div class="span-24 last append-bottom">
            <div class="span-24 last">
                 <div class="prepend-18 span-2">
                     tests
@@ -17,8 +17,9 @@
             </div>
         {% for suite in suites %}
         <div class="span-24 last">
-            <div class="span-24 opener suite">
+            <div class="span-24 opener suite last">
                 <div class="span-18 title
+                success-box 
                 {% if suite.failures %}failure-box{% endif %}
                 {% if suite.errors %}error-box{% endif %}
                 ">
@@ -34,10 +35,32 @@
                     <strong>{{suite.errors}}</strong>
                 </div>
             </div>
-            {% for testcase in suite.testcases %}
+            <div class="hide toopen">
+            {% for testclassname, testclass in suite.testclasses.items %}
+            <div class="span-24 last opener" style="border-top: 3px solid #FFF">
+                <div class="span-18 title
+                success-box 
+                {% if testclass.failure %}failure-box{% endif %}
+                {% if testclass.error %}error-box{% endif %}
+                ">
+                    {{testclassname}}
+                </div>
+                <div class="span-2">
+                    {{testclass.test}} 
+                </div>
+                <div class="span-2">
+                    <strong>{{testclass.failure}}</strong>
+                </div>
+                <div class="span-2 last">
+                    <strong>{{testclass.error}}</strong>
+                </div>
+            </div>
+            
+            {% for testcase in testclass.tests %}
             <div class="span-24 toopen">
                 <div class="span-1">&nbsp;</div>
                 <div class="span-17
+                success-box 
                 {% if testcase.failure %}failure-box{% endif %}
                 {% if testcase.error %}error-box{% endif %}
                 ">{{testcase.name}}</div>
@@ -51,17 +74,20 @@
                     {% if testcase.error %}X{% endif %}
                 </div>
                 
-                
                 <div class="prepend-2 span-16">{% for message in testcase.messages %}
-                    <span class="short opener"><strong>{{message.type}}</strong>
-                    {{message.message}}</span>
-                    <div class="hide toopen">
+                    <span class="short opener">
+                        <strong>{{message.type}}</strong>
+                        {{message.message}}
+                    </span>
+                    <div class="toopen">
                         <pre>{{message.content}}</pre>
                     </div>
                     {% endfor %}
                 </div>
             </div>
             {% endfor %}
+            {% endfor %}
+            </div>
         </div>
     </div>
 <script typ="text/javascript">
