@@ -49,8 +49,18 @@ class BuildStep(models.Model):
     extra = JSONField()
 
     def __unicode__(self):
-        return '%s/%s' % (self.build,
-            'successful' if self.successful else 'failed')
+        return '%s/%s' % (self.build, self.state)
+    
+    
+    def state_css_class(self):
+        if self.successful:
+            return "success"
+        else:
+            return "error"
+
+    @property
+    def state(self):
+        return 'successful' if self.successful else 'failed'
 
     def return_code(self):
         return dict(self.extra).get('return_code', None)

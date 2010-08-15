@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block heading %}{{object.name}}{% endblock %}
+
+{% block activities %}
+<a class="button" href="{% url workers_edit object.pk %}">
+  Configure
+</a>
+<a class="button" href="{% url workers_delete object.pk %}">
+  Delete
+</a>
+{% endblock %}
+
+{% block content %}
+
+<p>This build node is set up to connect to <em>{{object.host}}</em> with username <em>{{object.username}}<em/></p>
+
+{% if object.ssh_key %}
+<p class="success">SSH Key is set.</p>
+{% else %}
+<p class="notice">SSH key is not present, make sure this server is set up to connect.</p>
+{% endif %}
+
+{% endblock %}

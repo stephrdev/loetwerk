@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+
+{% block heading %}
+Workers
+{% endblock %}
+
+{% block activities %}
+<a class="button" href="{% url workers_create %}">Add new worker</a>
+{% endblock %}
+
+{% block content %}
+    <table>
+        <thead>
+            <th>Project</th>
+            <th>Last build</th>
+            <th>Current state</th>
+        </thead>
+        {% for object in object_list %}
+        <tr class="{% if object.active %}active{% else %}inactive{% endif %}">
+            <td>
+                <a href="{% url workers_detail object.pk %}">
+                {{ object.name }}
+                </a>
+            </td>
+            <td>
+                
+            </td>
+            <td>
+                
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

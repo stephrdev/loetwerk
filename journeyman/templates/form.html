@@ -4,12 +4,18 @@
         {{ field }}
     {% else %}
         <div class="fieldWrapper">
+            {% if field.help_text %}
             <p>
                 {{ field.help_text }} 
-                {% if field.field.required %}
-                <span class="req">*</span>
-                {% endif %}
             </p>
+            {% endif %}
+            <p>
+                <label for="{{ field.auto_id }}" class="">
+                    {{ field.label }} 
+                    {% if field.field.required %}
+                    <span class="req">*</span>
+                    {% endif %} 
+                </label>
                 {% if field.errors %}
                     <div class="error">{{ field.errors }}</div>
                 {% endif %}

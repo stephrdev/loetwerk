@@ -8,23 +8,31 @@
 
 {% block content %}
 
-    <h1>Build: {{ object.project }}/{{ object.node }}/{{ object.state }}</h1>
-    <ul>
-        <li><em>Project</em>: <a href="{% url projects_detail object.project.pk %}">{{ object.project }}</a></li>
-        <li><em>Revision</em>: {{ object.revision }}</li>
-        <li><em>Build node</em>: {{ object.node }}</li>
-        <li><em>Build started</em>: {{ object.started }}</li>
-        <li><em>Build finished</em>: {{ object.finished }}</li>
-    </ul>
-    <h2 class="result {{ object.state }}">{{ object.state }}</h2>
+    <h2 class="{{object.state_css_class}}">
+        {{ object.short_revision }} on {{ object.node.name }} {{ object.state}}
+    </h2>
+    <dl>
+        <dt>Project</dt>
+        <dd>
+            <a href="{% url projects_detail object.project.pk %}">
+                {{ object.project }}
+            </a>
+        </dd>
+        <dt>Revision</dt><dd>{{ object.revision }}</dd>
+        <dt>Node</dt><dd>{{ object.node }}</dd>
+        <dt>Started</dt><dd>{{ object.started }}</dd>
+        <dt>Finished</dt><dd>{{ object.finished }}</dd>
+    </dl>
     <hr>
-    <h2>Steps</h2>
+    <h2>Build log</h2>
     {% for step in object.build_steps %}
-        <h3>{{ step.name }} ({{ step.started }} - {{ step.finished }},
-            {{ step.return_code }})</h3>
-        <h4 class="result {% if step.successful %}stable{% else %}failed{% endif %}">
-            {% if step.successful %}successful{% else %}failed{% endif %}
-        </h4>
+        <div class="span-2 {{ step.state_css_class }}-box" id="build-step-{{step_id}}">
+             {% if step.successful %}success{% else %}fail{% endif %}
+        </div>
+        <div class="span-22 last" id="build-step-{{step_id}}">
+        <h3>{{ step.name }}</h3>
+        </div>         
+        <div class="prepend-2 append-bottom span-22">
         {% if step.exception_message %}
         <h4>Exception</h4>
         <pre>{{ step.exception_message }}</pre>
@@ -36,7 +44,7 @@
         {% if step.stderr %}
         <h4>stderr</h4>
         <pre>{{ step.stderr }}</pre>
-        {% endif %}
-        <hr />
+        {% endif %}        
+        </div>
     {% endfor %}
 {% endblock %}
