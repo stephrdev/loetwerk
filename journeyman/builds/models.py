@@ -61,7 +61,6 @@ class BuildStep(models.Model):
     def __unicode__(self):
         return '%s/%s' % (self.build, self.state)
     
-    
     def state_css_class(self):
         if self.successful:
             return "success"

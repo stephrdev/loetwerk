@@ -48,7 +48,8 @@ textarea {
 .failure-box,
 .error-box,
 .notice-box,
-.success-box   { 
+.success-box,
+.unknown-box { 
     text-indent: 4px;
     font-variant: small-caps;
     letter-spacing: 1px;
