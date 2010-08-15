@@ -65,7 +65,7 @@ class BuildRunner(object):
         if self.build.buildstep_set.filter(successful=False).count() > 0:
             self.build.state = BuildState.FAILED
         else:
-            # Look for build results to check for another state.
+            # Look for build results if all build steps where successful.
             for build_result in self.build.buildresult_set.all():
                 if build_result.buildstate != BuildState.STABLE:
                     self.build.state = build_result.buildstate
