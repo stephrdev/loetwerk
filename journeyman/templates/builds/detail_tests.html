@@ -20,8 +20,8 @@
             <div class="span-24 opener suite last">
                 <div class="span-18 title
                 success-box 
-                {% if suite.failures %}failure-box{% endif %}
-                {% if suite.errors %}error-box{% endif %}
+                {% if suite.failures != '0' %}failure-box{% endif %}
+                {% if suite.errors != '0' %}error-box{% endif %}
                 ">
                     {{suite.name}}
                 </div>

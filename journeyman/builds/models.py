@@ -120,6 +120,7 @@ class BuildResult(models.Model):
         for item in root.findall('.'):
             # New testsuite.
             ts = TestSuite(item.attrib)
+            ts.name = self.name
             suites.append(ts)
             # Walk through tests
             for test in item.iterchildren():
