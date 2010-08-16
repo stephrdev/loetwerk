@@ -106,7 +106,7 @@ class BuildResult(models.Model):
     def buildstate(self):
         # The build state should be FAILED of anything went wrong.
         if int(self.get_testsuites()[0].failures) > 0 \
-            or int(self.get_testsuites()[0].failures) > 0:
+            or int(self.get_testsuites()[0].errors) > 0:
             return BuildState.FAILED
         else:
             return BuildState.STABLE
